@@ -43,18 +43,28 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
         }
     }
 
-    fun speak(item: QItem) {
+    /** Plays the item [times] times in a row (for "listen and repeat"). */
+    fun speak(item: QItem, times: Int = 1) {
         stopClip()
         val clip = "${item.id}.ogg"
         if (clip in clips) {
-            playClip("audio/$clip")
+            playClip("audio/$clip", times)
             return
         }
         tts.setSpeechRate(if (slow) 0.5f else 0.8f)
-        tts.speak(item.speak, TextToSpeech.QUEUE_FLUSH, null, item.id)
+        for (i in 0 until times) {
+            tts.speak(item.speak, if (i == 0) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD, null, "${item.id}_$i")
+            if (i < times - 1) tts.playSilentUtterance(600, TextToSpeech.QUEUE_ADD, null)
+        }
     }
 
-    private fun playClip(path: String) {
+    fun stop() {
+        stopClip()
+        tts.stop()
+    }
+
+    private fun playClip(path: String, times: Int) {
+        var remaining = times
         runCatching {
             appContext.assets.openFd(path).use { fd ->
                 player = MediaPlayer().apply {
@@ -63,8 +73,14 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
                         playbackParams = playbackParams.setSpeed(0.7f)
                     }
                     setOnCompletionListener { mp ->
-                        mp.release()
-                        if (player === mp) player = null
+                        remaining--
+                        if (remaining > 0 && player === mp) {
+                            mp.seekTo(0)
+                            mp.start()
+                        } else {
+                            mp.release()
+                            if (player === mp) player = null
+                        }
                     }
                     prepare()
                     start()

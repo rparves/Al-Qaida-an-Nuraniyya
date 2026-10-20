@@ -1,65 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">নূরানী কায়দা</string>
-    <string name="switch_language">English</string>
-    <string name="lessons">পাঠসমূহ</string>
+    <string name="welcome">স্বাগতম, কুরআনের ছোট্ট বীর!</string>
+    <string name="welcome_name">স্বাগতম, %1$s!</string>
+    <string name="tap_sun">উৎসাহ পেতে সূর্যে চাপ দাও!</string>
+    <string name="your_name">তোমার নাম</string>
+    <string name="name_hint">তোমার নাম লেখো…</string>
+    <string name="progress">অগ্রগতি: %1$d/%2$d পাঠ (%3$d%%)</string>
+    <string name="stars">%1$dটি তারা</string>
+    <string name="reset_progress">অগ্রগতি মুছুন</string>
+    <string name="reset_confirm">সব তারা ও আয়ত্ত করা পাঠ মুছে যাবে?</string>
+    <string name="reset">মুছুন</string>
+    <string name="cancel">বাতিল</string>
+    <string name="mode_listen_title">শোনো ও বারবার বলো</string>
+    <string name="mode_listen_desc">প্রতিটি হরফ স্পষ্ট শোনো, যতবার ইচ্ছা</string>
+    <string name="mode_listen_tag">কণ্ঠ</string>
+    <string name="mode_quiz_title">হরফ ও শব্দের কুইজ</string>
+    <string name="mode_quiz_desc">আওয়াজ শুনে সঠিকটি বেছে তারা জেতো</string>
+    <string name="mode_quiz_tag">৪টি বিকল্প</string>
+    <string name="mode_trace_title">হরফ লেখা ও ট্রেস</string>
+    <string name="mode_trace_desc">ডটেড হরফের ওপর আঁকো, আকৃতি শেখো</string>
+    <string name="mode_trace_tag">আঁকার বোর্ড</string>
+    <string name="lessons_title">নূরানী কায়দার পাঠ (%1$d)</string>
+    <string name="lessons_sub">শুনতে, কুইজ দিতে বা অনুশীলন করতে একটি পাঠ বেছে নাও</string>
+    <string name="filter_all">সব (%1$d)</string>
+    <string name="filter_remaining">বাকি (%1$d)</string>
+    <string name="filter_mastered">আয়ত্ত (%1$d)</string>
+    <string name="empty_filter">এখানে এখনো কোনো পাঠ নেই</string>
     <string name="lesson_n">পাঠ %1$d</string>
-
-    <string name="l1_title">একক হরফ</string>
-    <string name="l1_desc">আরবি ২৯টি হরফ সঠিক উচ্চারণে</string>
-    <string name="l2_title">হুরূফে মুকাত্তাআত</string>
-    <string name="l2_desc">কিছু সূরার শুরুতে থাকা বিচ্ছিন্ন হরফ</string>
-    <string name="l3_title">হরকত</string>
-    <string name="l3_desc">যবর, যের ও পেশ</string>
-    <string name="l4_title">তানভীন</string>
-    <string name="l4_desc">দুই যবর, দুই যের ও দুই পেশ</string>
-    <string name="l5_title">মদ (দীর্ঘ স্বর)</string>
-    <string name="l5_desc">আলিফ, ইয়া ও ওয়াও দিয়ে টেনে পড়া</string>
-    <string name="l6_title">জযম (সুকূন)</string>
-    <string name="l6_desc">স্বরবিহীন হরফ মিলিয়ে পড়া</string>
-    <string name="l7_title">তাশদীদ</string>
-    <string name="l7_desc">দ্বিত্ব হরফ জোর দিয়ে পড়া</string>
-    <string name="writing_title">লেখার অনুশীলন</string>
-    <string name="writing_desc">একটি হরফ আঁকুন, ডিভাইসের এআই যাচাই করবে</string>
-
-    <string name="listen">শুনুন</string>
-    <string name="say_it">বলুন</string>
+    <string name="interactive">ইন্টারঅ্যাকটিভ</string>
+    <string name="mastered_badge">আয়ত্ত</string>
+    <string name="best_score">সেরা: %1$d/10</string>
+    <string name="start_lesson">পাঠ শুরু করো</string>
+    <string name="quiz">কুইজ</string>
+    <string name="write">লেখো</string>
+    <string name="listen">শোনো</string>
+    <string name="say_it">বলো</string>
     <string name="listening">শুনছি…</string>
     <string name="correct">চমৎকার!</string>
-    <string name="try_again">পুরোপুরি হয়নি। আবার শুনে চেষ্টা করুন।</string>
+    <string name="try_again">পুরোপুরি হয়নি। আবার শুনে চেষ্টা করো।</string>
     <string name="heard_x">শোনা গেছে: %1$s</string>
-    <string name="mic_permission_needed">উচ্চারণ যাচাই করতে মাইক্রোফোনের অনুমতি প্রয়োজন।</string>
+    <string name="mic_permission_needed">উচ্চারণ যাচাই করতে মাইক্রোফোনের অনুমতি দরকার।</string>
     <string name="speech_unavailable">এই ডিভাইসে স্পিচ রিকগনিশন নেই।</string>
-    <string name="speech_lang_missing">আরবি স্পিচ রিকগনিশন ইনস্টল করা নেই। ডিভাইসের ভয়েস টাইপিং সেটিংসে আরবি যোগ করুন।</string>
-    <string name="speech_no_match">বোঝা যায়নি। স্পষ্ট করে আবার বলুন।</string>
-    <string name="speech_network">নেটওয়ার্ক সমস্যা। ইন্টারনেট সংযোগ দিন বা অফলাইন আরবি স্পিচ ইনস্টল করুন।</string>
+    <string name="speech_lang_missing">আরবি স্পিচ রিকগনিশন ইনস্টল নেই। ডিভাইসের ভয়েস টাইপিং সেটিংসে আরবি যোগ করো।</string>
+    <string name="speech_no_match">বোঝা যায়নি। স্পষ্ট করে আবার বলো।</string>
+    <string name="speech_network">নেটওয়ার্ক সমস্যা। ইন্টারনেট চালু করো বা অফলাইন আরবি স্পিচ ইনস্টল করো।</string>
     <string name="speech_error">স্পিচ রিকগনিশন ত্রুটি (%1$d)</string>
-
-    <string name="tts_missing_title">আরবি ভয়েস ইনস্টল করা নেই</string>
-    <string name="tts_missing_desc">হরফগুলো শুনতে আপনার টেক্সট-টু-স্পিচ ইঞ্জিনে আরবি ভয়েস ইনস্টল করুন।</string>
-    <string name="install_voice">ভয়েস ইনস্টল করুন</string>
-    <string name="tts_unavailable">কোনো টেক্সট-টু-স্পিচ ইঞ্জিন পাওয়া যায়নি। Google Speech Services ইনস্টল করুন।</string>
-
-    <string name="play_all">সব চালান</string>
-    <string name="stop">থামুন</string>
+    <string name="tts_missing_title">আরবি ভয়েস ইনস্টল নেই</string>
+    <string name="tts_missing_desc">হরফ শুনতে টেক্সট-টু-স্পিচ ইঞ্জিনে আরবি ভয়েস ইনস্টল করো।</string>
+    <string name="install_voice">ভয়েস ইনস্টল করো</string>
+    <string name="tts_unavailable">কোনো টেক্সট-টু-স্পিচ ইঞ্জিন নেই। Google Speech Services ইনস্টল করো।</string>
+    <string name="play_all">সব চালাও</string>
+    <string name="stop">থামো</string>
     <string name="slow">ধীরে</string>
+    <string name="repeat">পুনরাবৃত্তি</string>
     <string name="back">পেছনে</string>
     <string name="of_letter">হরফ: %1$s</string>
-
+    <string name="quiz_question">কোনটি শুনলে?</string>
+    <string name="quiz_progress">প্রশ্ন %1$d / %2$d</string>
+    <string name="play_again">আবার শোনো</string>
+    <string name="quiz_wrong">সঠিক উত্তর ছিল %1$s</string>
+    <string name="quiz_done">%2$dটির মধ্যে %1$dটি সঠিক</string>
+    <string name="quiz_mastered">পাঠ আয়ত্ত হয়েছে!</string>
+    <string name="quiz_keep">পাঠ আয়ত্ত করতে ৮ বা তার বেশি পাও</string>
+    <string name="try_quiz_again">আবার চেষ্টা</string>
     <string name="clear">মুছুন</string>
     <string name="check">যাচাই</string>
     <string name="next">পরের</string>
     <string name="previous">আগের</string>
-    <string name="show_guide">ট্রেসিং গাইড দেখান</string>
+    <string name="trace_mode">ট্রেস</string>
+    <string name="free_mode">নিজে লেখো (এআই)</string>
+    <string name="trace_hint">ডটের ওপর দিয়ে আঁকো</string>
+    <string name="free_hint">মনে করে হরফটি লেখো</string>
+    <string name="trace_result">হরফের %1$d%% ঢাকা, %2$d%% রেখার ওপর</string>
     <string name="model_checking">হাতের লেখার মডেল প্রস্তুত হচ্ছে…</string>
     <string name="model_downloading">হাতের লেখার মডেল ডাউনলোড হচ্ছে (শুধু একবার)…</string>
-    <string name="model_failed">মডেল ডাউনলোড করা যায়নি। ইন্টারনেট সংযোগ দেখুন।</string>
+    <string name="model_failed">মডেল ডাউনলোড করা যায়নি। ইন্টারনেট সংযোগ দেখো।</string>
     <string name="retry">আবার চেষ্টা</string>
-    <string name="write_x">লিখুন: %1$s</string>
+    <string name="write_x">লেখো: %1$s</string>
     <string name="write_correct">সঠিক! এটি %1$s</string>
-    <string name="write_wrong">দেখে মনে হচ্ছে %1$s। আবার চেষ্টা করুন।</string>
-    <string name="write_unknown">চেনা যায়নি। আবার চেষ্টা করুন।</string>
-
+    <string name="write_wrong">দেখে মনে হচ্ছে %1$s। আবার চেষ্টা করো।</string>
+    <string name="write_unknown">চেনা যায়নি। আবার চেষ্টা করো।</string>
     <string name="makhraj_label">মাখরাজ: %1$s</string>
     <string name="makhraj_jawf">জাওফ</string>
     <string name="makhraj_jawf_desc">মুখ ও গলার ফাঁকা স্থান, দীর্ঘ স্বরের জন্য</string>
@@ -69,4 +90,11 @@
     <string name="makhraj_lisan_desc">জিহ্বা দিয়ে উচ্চারিত</string>
     <string name="makhraj_shafatan">শাফাতান (দুই ঠোঁট)</string>
     <string name="makhraj_shafatan_desc">ঠোঁট দিয়ে উচ্চারিত</string>
+    <string-array name="cheers">
+        <item>দারুণ করছ!</item>
+        <item>মাশাআল্লাহ, চালিয়ে যাও!</item>
+        <item>প্রতিটি হরফ কুরআনের দিকে এক ধাপ!</item>
+        <item>আরেকটা পাঠ, তুমি পারবে!</item>
+        <item>তোমার চেষ্টায় সূর্য হাসছে!</item>
+    </string-array>
 </resources>

@@ -15,7 +15,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         // Size: keep only English + Bangla resources from all libraries.
-        resourceConfigurations += listOf("en", "bn")
+        resourceConfigurations += listOf("en", "bn", "ar")
     }
 
     buildTypes {
@@ -71,6 +71,7 @@ dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2024.09.00")
     implementation(composeBom)
     implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-text-google-fonts") // fonts download at runtime, 0 MB in the APK
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.activity:activity-compose:1.9.2")

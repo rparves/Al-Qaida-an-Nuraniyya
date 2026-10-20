@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">القاعدة النورانية</string>
+    <string name="welcome">أهلاً بك يا بطل القرآن الكريم!</string>
+    <string name="welcome_name">أهلاً بك يا %1$s!</string>
+    <string name="tap_sun">اضغط على الشمس لتشجعك!</string>
+    <string name="your_name">اسمك</string>
+    <string name="name_hint">اكتب اسمك…</string>
+    <string name="progress">إنجازك: %1$d/%2$d درساً (%3$d%%)</string>
+    <string name="stars">%1$d نجمة</string>
+    <string name="reset_progress">إعادة تعيين التقدم</string>
+    <string name="reset_confirm">هل تريد مسح كل النجوم والدروس المتقنة؟</string>
+    <string name="reset">مسح</string>
+    <string name="cancel">إلغاء</string>
+    <string name="mode_listen_title">الاستماع وتلقي الدروس</string>
+    <string name="mode_listen_desc">استمع للنطق المتقن والتكرار مرات</string>
+    <string name="mode_listen_tag">صوت</string>
+    <string name="mode_quiz_title">اختبار الحروف والكلمات</string>
+    <string name="mode_quiz_desc">استمع لصوت الحرف واختر الصحيح لزيادة نقاطك</string>
+    <string name="mode_quiz_tag">٤ خيارات</string>
+    <string name="mode_trace_title">كتابة وتتبع الحروف</string>
+    <string name="mode_trace_desc">تتبع نقاط الحرف المحدد لتثبيت رسم الحرف</string>
+    <string name="mode_trace_tag">لوحة رسم</string>
+    <string name="lessons_title">قائمة دروس القاعدة النورانية (%1$d درساً)</string>
+    <string name="lessons_sub">اختر درساً للاستماع أو الاختبار أو التدريب</string>
+    <string name="filter_all">الكل (%1$d)</string>
+    <string name="filter_remaining">باقي الدروس (%1$d)</string>
+    <string name="filter_mastered">المتقنة (%1$d)</string>
+    <string name="empty_filter">لا توجد دروس هنا بعد</string>
+    <string name="lesson_n">الدرس %1$d</string>
+    <string name="interactive">تفاعلي</string>
+    <string name="mastered_badge">متقن</string>
+    <string name="best_score">أفضل نتيجة: %1$d/10</string>
+    <string name="start_lesson">ابدأ الدرس التفاعلي</string>
+    <string name="quiz">اختبار</string>
+    <string name="write">اكتب</string>
+    <string name="listen">استمع</string>
+    <string name="say_it">انطق</string>
+    <string name="listening">أستمع…</string>
+    <string name="correct">أحسنت!</string>
+    <string name="try_again">ليس تماماً. استمع وحاول مرة أخرى.</string>
+    <string name="heard_x">سمعت: %1$s</string>
+    <string name="mic_permission_needed">يلزم إذن الميكروفون للتحقق من نطقك.</string>
+    <string name="speech_unavailable">التعرف على الكلام غير متوفر على هذا الجهاز.</string>
+    <string name="speech_lang_missing">التعرف على الكلام العربي غير مثبت. أضف العربية في إعدادات الكتابة الصوتية.</string>
+    <string name="speech_no_match">لم أفهم. انطق بوضوح وحاول مرة أخرى.</string>
+    <string name="speech_network">خطأ في الشبكة. اتصل بالإنترنت أو ثبّت الكلام العربي دون اتصال.</string>
+    <string name="speech_error">خطأ في التعرف على الكلام (%1$d)</string>
+    <string name="tts_missing_title">الصوت العربي غير مثبت</string>
+    <string name="tts_missing_desc">ثبّت الصوت العربي في محرك تحويل النص إلى كلام لسماع الحروف.</string>
+    <string name="install_voice">تثبيت الصوت</string>
+    <string name="tts_unavailable">لا يوجد محرك لتحويل النص إلى كلام. ثبّت خدمات Google للكلام.</string>
+    <string name="play_all">تشغيل الكل</string>
+    <string name="stop">إيقاف</string>
+    <string name="slow">ببطء</string>
+    <string name="repeat">تكرار</string>
+    <string name="back">رجوع</string>
+    <string name="of_letter">الحرف: %1$s</string>
+    <string name="quiz_question">أيّها سمعت؟</string>
+    <string name="quiz_progress">السؤال %1$d من %2$d</string>
+    <string name="play_again">استمع مرة أخرى</string>
+    <string name="quiz_wrong">الإجابة الصحيحة: %1$s</string>
+    <string name="quiz_done">أجبت %1$d من %2$d</string>
+    <string name="quiz_mastered">أتقنت الدرس!</string>
+    <string name="quiz_keep">احصل على ٨ أو أكثر لإتقان الدرس</string>
+    <string name="try_quiz_again">حاول مرة أخرى</string>
+    <string name="clear">مسح</string>
+    <string name="check">تحقق</string>
+    <string name="next">التالي</string>
+    <string name="previous">السابق</string>
+    <string name="trace_mode">تتبّع</string>
+    <string name="free_mode">كتابة حرة (ذكاء اصطناعي)</string>
+    <string name="trace_hint">ارسم فوق النقاط</string>
+    <string name="free_hint">اكتب الحرف من ذاكرتك</string>
+    <string name="trace_result">غطّيت %1$d%% من الحرف، و%2$d%% على الخط</string>
+    <string name="model_checking">جارٍ تجهيز نموذج الكتابة…</string>
+    <string name="model_downloading">جارٍ تنزيل نموذج الكتابة (مرة واحدة فقط)…</string>
+    <string name="model_failed">تعذّر تنزيل نموذج الكتابة. تحقق من اتصالك بالإنترنت.</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="write_x">اكتب: %1$s</string>
+    <string name="write_correct">صحيح! هذا %1$s</string>
+    <string name="write_wrong">يبدو مثل %1$s. حاول مرة أخرى.</string>
+    <string name="write_unknown">لم أتعرف عليه. حاول مرة أخرى.</string>
+    <string name="makhraj_label">المخرج: %1$s</string>
+    <string name="makhraj_jawf">الجوف</string>
+    <string name="makhraj_jawf_desc">الفراغ في الفم والحلق، لحروف المد</string>
+    <string name="makhraj_halq">الحلق</string>
+    <string name="makhraj_halq_desc">يخرج من الحلق</string>
+    <string name="makhraj_lisan">اللسان</string>
+    <string name="makhraj_lisan_desc">يخرج من اللسان</string>
+    <string name="makhraj_shafatan">الشفتان</string>
+    <string name="makhraj_shafatan_desc">يخرج من الشفتين</string>
+    <string-array name="cheers">
+        <item>أنت رائع!</item>
+        <item>ما شاء الله، استمر!</item>
+        <item>كل حرف خطوة نحو القرآن!</item>
+        <item>درس آخر، أنت تستطيع!</item>
+        <item>اجتهادك يجعل الشمس تبتسم!</item>
+    </string-array>
+</resources>
