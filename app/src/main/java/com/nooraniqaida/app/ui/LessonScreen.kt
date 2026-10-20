@@ -7,10 +7,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -34,8 +37,12 @@ import com.nooraniqaida.app.R
 import com.nooraniqaida.app.audio.Speaker
 import com.nooraniqaida.app.data.Lesson
 import com.nooraniqaida.app.data.QItem
+import com.nooraniqaida.app.data.Spelling
 import com.nooraniqaida.app.ml.PronunciationChecker
 import kotlinx.coroutines.delay
+
+/** Lessons 1 to 3 are letter names already; spelling starts with the harakat. */
+private fun canSpell(lesson: Lesson) = lesson.number >= 4
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,13 +51,24 @@ fun LessonScreen(lesson: Lesson, speaker: Speaker, onBack: () -> Unit, onQuiz: (
     var selected by remember { mutableStateOf<QItem?>(null) }
     var playingAll by remember { mutableStateOf(false) }
     var times by rememberSaveable { mutableIntStateOf(1) }
+    var spell by rememberSaveable { mutableStateOf(canSpell(lesson)) }
+
+    fun partsFor(item: QItem) = if (spell && canSpell(lesson)) Spelling.parts(Spelling.source(item)) else emptyList()
+    fun play(item: QItem) = speaker.speak(item, times, partsFor(item).map { it.speak })
+
+    // Say the lesson title when the lesson opens (with Bismillah first in lesson 1).
+    LaunchedEffect(lesson.number) {
+        delay(400)
+        speaker.playIntro(lesson.titleAr, withBasmala = lesson.number == 1)
+    }
 
     LaunchedEffect(playingAll) {
         if (!playingAll) return@LaunchedEffect
         for (item in lesson.items) {
             selected = item
-            speaker.speak(item, times)
-            delay((if (speaker.slow) 1900L else 1300L) * times)
+            play(item)
+            val units = partsFor(item).size + 1
+            delay((if (speaker.slow) 1700L else 1150L) * units * times + 300L)
         }
         playingAll = false
     }
@@ -80,25 +98,35 @@ fun LessonScreen(lesson: Lesson, speaker: Speaker, onBack: () -> Unit, onQuiz: (
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back), tint = Garden.GreenDark)
                         }
                     },
+                    actions = { EmojiButton("🧠", onClick = onQuiz) },
                     modifier = Modifier.padding(top = 24.dp),
                 )
             },
-            bottomBar = { selected?.let { PracticePanel(it, speaker, lang, times) } },
+            bottomBar = {
+                selected?.let { item ->
+                    PracticePanel(
+                        item, speaker, lang, times,
+                        spellParts = if (canSpell(lesson)) Spelling.parts(Spelling.source(item)) else emptyList(),
+                        showDiagramByDefault = lesson.number == 1,
+                    )
+                }
+            },
         ) { pad ->
             Column(Modifier.padding(pad).fillMaxSize()) {
-                // Controls: repeat count, speed, play all, quiz.
+                // Controls: repeat count, spelling, speed, play all.
                 Row(
-                    Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Chip("🔁 ${stringResource(R.string.repeat)} ×$times", times > 1) { times = if (times >= 3) 1 else times + 1 }
+                    Chip("🔁 ${stringResource(R.string.repeat)} ×$times", times > 1) { times = if (times >= 5) 1 else times + 1 }
+                    if (canSpell(lesson)) {
+                        Chip("🔤 " + stringResource(R.string.spell), spell) { spell = !spell }
+                    }
                     Chip(if (speaker.slow) "🐢 " + stringResource(R.string.slow) else "🐇", speaker.slow) { speaker.slow = !speaker.slow }
-                    Spacer(Modifier.weight(1f))
                     Chip(if (playingAll) "⏹ " + stringResource(R.string.stop) else "▶ " + stringResource(R.string.play_all), playingAll) {
                         playingAll = !playingAll
                     }
-                    EmojiButton("🧠", onClick = onQuiz)
                 }
                 Spacer(Modifier.height(8.dp))
                 // Arabic is read right to left, so the grid flows right to left too.
@@ -110,15 +138,41 @@ fun LessonScreen(lesson: Lesson, speaker: Speaker, onBack: () -> Unit, onQuiz: (
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
+                        item(span = { GridItemSpan(maxLineSpan) }, key = "title") {
+                            LessonTitleCard(lesson, lang) {
+                                speaker.playIntro(lesson.titleAr, withBasmala = lesson.number == 1)
+                            }
+                        }
                         items(lesson.items, key = { it.id }) { item ->
                             LetterCell(item, item == selected, lang) {
                                 playingAll = false
                                 selected = item
-                                speaker.speak(item, times)
+                                play(item)
                             }
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LessonTitleCard(lesson: Lesson, lang: String, onPlay: () -> Unit) {
+    GardenCard(borderColor = Garden.Yellow) {
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            if (lesson.number == 1) {
+                Text(Speaker.BASMALA_TEXT, style = quranStyle(26.sp), color = Garden.GreenDark, fontWeight = FontWeight.Bold)
+                HorizontalDivider(Modifier.padding(vertical = 6.dp).width(120.dp), color = Garden.Yellow)
+            }
+            Text(lesson.titleAr, style = quranStyle(28.sp), color = Garden.Ink, fontWeight = FontWeight.Bold)
+            if (lang != "ar") {
+                Text(lesson.title.pick(lang), style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.ExtraBold, color = Garden.Green, textAlign = TextAlign.Center)
+            }
+            Spacer(Modifier.height(8.dp))
+            CompositionLocalProvider(LocalLayoutDirection provides if (lang == "ar") LayoutDirection.Rtl else LayoutDirection.Ltr) {
+                Chip("🔊 " + stringResource(R.string.play_title), false, onPlay)
             }
         }
     }
@@ -155,8 +209,8 @@ private fun LetterCell(item: QItem, selected: Boolean, lang: String, onClick: ()
             .padding(vertical = 8.dp, horizontal = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val long = item.display.length > 6
-        Text(item.display, style = quranStyle(if (long) 24.sp else if (item.display.length > 3) 30.sp else 38.sp), color = Garden.Ink)
+        val len = item.display.length
+        Text(item.display, style = quranStyle(if (len > 6) 24.sp else if (len > 3) 30.sp else 38.sp), color = Garden.Ink)
         if (lang != "ar") {
             Text(
                 if (lang == "bn") item.bn else item.en,
@@ -171,13 +225,21 @@ private fun LetterCell(item: QItem, selected: Boolean, lang: String, onClick: ()
 }
 
 @Composable
-private fun PracticePanel(item: QItem, speaker: Speaker, lang: String, times: Int) {
+private fun PracticePanel(
+    item: QItem,
+    speaker: Speaker,
+    lang: String,
+    times: Int,
+    spellParts: List<Spelling.Part>,
+    showDiagramByDefault: Boolean,
+) {
     val context = LocalContext.current
     val checker = remember { PronunciationChecker(context) }
     DisposableEffect(item.id) { onDispose { checker.cancel() } }
 
     var feedback by remember(item.id) { mutableStateOf<String?>(null) }
     var listening by remember(item.id) { mutableStateOf(false) }
+    var showDiagram by rememberSaveable { mutableStateOf(showDiagramByDefault) }
 
     fun startListening() {
         listening = true
@@ -211,32 +273,82 @@ private fun PracticePanel(item: QItem, speaker: Speaker, lang: String, times: In
             .background(Color.White)
             .border(2.dp, Garden.Mint, shape)
             .navigationBarsPadding()
-            .padding(18.dp),
+            .padding(start = 18.dp, end = 18.dp, top = 14.dp, bottom = 14.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(item.display, style = quranStyle(40.sp), color = Garden.Ink, modifier = Modifier.padding(end = 14.dp))
+            Text(item.display, style = quranStyle(38.sp), color = Garden.Ink, modifier = Modifier.padding(end = 14.dp))
             Column(Modifier.weight(1f)) {
                 Text(
-                    when (lang) { "bn" -> item.bn; else -> item.en },
+                    if (lang == "bn") item.bn else item.en,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.ExtraBold,
                     color = Garden.GreenDark,
                 )
                 item.harf?.let { h ->
                     if (!item.id.startsWith("l_")) {
-                        Text(stringResource(R.string.of_letter, if (lang == "bn") h.nameBn else if (lang == "ar") h.nameAr else h.nameEn),
+                        Text(stringResource(R.string.of_letter, when (lang) { "bn" -> h.nameBn; "ar" -> h.nameAr; else -> h.nameEn }),
                             style = MaterialTheme.typography.bodySmall, color = Garden.Muted)
                     }
-                    Text(stringResource(R.string.makhraj_label, stringResource(h.makhraj.titleRes)),
+                    Text(stringResource(R.string.makhraj_label, h.makhraj.title.pick(lang)),
                         style = MaterialTheme.typography.bodySmall, color = Garden.Green, fontWeight = FontWeight.Bold)
-                    Text(stringResource(h.makhraj.descRes), style = MaterialTheme.typography.bodySmall, color = Garden.Muted)
+                }
+            }
+            if (item.harf != null) {
+                EmojiButton(if (showDiagram) "🙂" else "👄", Garden.MintSoft, Garden.Mint) { showDiagram = !showDiagram }
+            }
+        }
+
+        // Furqan-style spelling line, e.g. "Hamzah fatha · Baa sukoon → ab".
+        if (spellParts.isNotEmpty()) {
+            val joined = spellParts.joinToString("  ·  ") { when (lang) { "bn" -> it.bn; "ar" -> it.speak; else -> it.en } }
+            Text(
+                "🔤 $joined  →  " + if (lang == "ar") item.display.substringAfterLast('\n') else if (lang == "bn") item.bn else item.en,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Garden.Brown,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(Garden.YellowSoft)
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+            )
+        }
+
+        // Makharij anatomy.
+        val h = item.harf
+        if (h != null && showDiagram) {
+            Row(Modifier.padding(top = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                MakhrajDiagram(
+                    h.makhraj,
+                    Modifier
+                        .size(width = 150.dp, height = 135.dp)
+                        .clip(RoundedCornerShape(18.dp))
+                        .background(Color(0xFFFFF8F0))
+                        .border(1.5.dp, Garden.Mint, RoundedCornerShape(18.dp)),
+                )
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text("👄 " + stringResource(R.string.makharij_title), style = MaterialTheme.typography.labelLarge,
+                        color = Garden.Muted, fontWeight = FontWeight.Bold)
+                    Text(h.makhraj.title.pick(lang), style = MaterialTheme.typography.titleMedium,
+                        color = Garden.GreenDark, fontWeight = FontWeight.ExtraBold)
+                    Text(h.makhraj.desc.pick(lang), style = MaterialTheme.typography.bodySmall, color = Garden.Ink)
+                    if (lang != "ar") {
+                        Text(h.makhraj.title.ar, style = quranStyle(15.sp, TextAlign.Left), color = Garden.Muted)
+                    }
                 }
             }
         }
+
         Spacer(Modifier.height(12.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             GradientButton("🔊 " + stringResource(R.string.listen), Garden.buttonBrush, Modifier.weight(1f)) {
                 speaker.speak(item, times)
+            }
+            if (spellParts.isNotEmpty()) {
+                GradientButton("🔤 " + stringResource(R.string.spell), Garden.traceBrush, Modifier.weight(1f)) {
+                    speaker.speak(item, times, spellParts.map { it.speak })
+                }
             }
             GradientButton("🎤 " + stringResource(R.string.say_it), Garden.quizBrush, Modifier.weight(1f)) {
                 if (listening) return@GradientButton

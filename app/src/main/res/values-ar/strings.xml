@@ -90,6 +90,23 @@
     <string name="makhraj_lisan_desc">يخرج من اللسان</string>
     <string name="makhraj_shafatan">الشفتان</string>
     <string name="makhraj_shafatan_desc">يخرج من الشفتين</string>
+    <string name="spell">تهجئة</string>
+    <string name="voice_settings">الصوت</string>
+    <string name="voice_title">اختر صوت القارئ</string>
+    <string name="voice_hint">لا يحدد الهاتف أي الأصوات رجالية. جرّب كل صوت واختر المناسب.</string>
+    <string name="voice_n">الصوت %1$d</string>
+    <string name="voice_online">يحتاج إنترنت</string>
+    <string name="voice_test">تجربة</string>
+    <string name="pitch_label">عمق الصوت</string>
+    <string name="deeper">أعمق</string>
+    <string name="higher">أعلى</string>
+    <string name="no_voices">لم يُعثر على أصوات عربية. ثبّت الصوت العربي أولاً.</string>
+    <string name="done">تم</string>
+    <string name="listen_limit">عدد مرات الاستماع لكل سؤال</string>
+    <string name="listens_left">متبقٍّ %1$d</string>
+    <string name="no_listens">انتهت مرات الاستماع</string>
+    <string name="play_title">استمع للعنوان</string>
+    <string name="makharij_title">مخرج الحرف</string>
     <string-array name="cheers">
         <item>أنت رائع!</item>
         <item>ما شاء الله، استمر!</item>

@@ -90,6 +90,23 @@
     <string name="makhraj_lisan_desc">জিহ্বা দিয়ে উচ্চারিত</string>
     <string name="makhraj_shafatan">শাফাতান (দুই ঠোঁট)</string>
     <string name="makhraj_shafatan_desc">ঠোঁট দিয়ে উচ্চারিত</string>
+    <string name="spell">বানান</string>
+    <string name="voice_settings">কণ্ঠ</string>
+    <string name="voice_title">তিলাওয়াতের কণ্ঠ বেছে নাও</string>
+    <string name="voice_hint">ফোন বলে না কোন কণ্ঠ পুরুষের। প্রতিটি শুনে দেখে সঠিকটি বেছে নাও।</string>
+    <string name="voice_n">কণ্ঠ %1$d</string>
+    <string name="voice_online">ইন্টারনেট লাগবে</string>
+    <string name="voice_test">শুনে দেখো</string>
+    <string name="pitch_label">কণ্ঠের গভীরতা</string>
+    <string name="deeper">গভীর</string>
+    <string name="higher">উঁচু</string>
+    <string name="no_voices">কোনো আরবি কণ্ঠ পাওয়া যায়নি। আগে আরবি ভয়েস ইনস্টল করো।</string>
+    <string name="done">ঠিক আছে</string>
+    <string name="listen_limit">প্রতি প্রশ্নে কতবার শোনা যাবে</string>
+    <string name="listens_left">আর %1$d বার</string>
+    <string name="no_listens">আর শোনা যাবে না</string>
+    <string name="play_title">শিরোনাম শোনো</string>
+    <string name="makharij_title">আওয়াজ কোথা থেকে আসে</string>
     <string-array name="cheers">
         <item>দারুণ করছ!</item>
         <item>মাশাআল্লাহ, চালিয়ে যাও!</item>

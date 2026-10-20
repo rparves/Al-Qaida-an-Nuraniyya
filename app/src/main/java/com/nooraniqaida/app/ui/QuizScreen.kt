@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -58,12 +59,15 @@ fun QuizScreen(lesson: Lesson, speaker: Speaker, progress: Progress, onBack: () 
     var score by rememberSaveable(seed) { mutableIntStateOf(0) }
     var picked by remember(seed, round) { mutableStateOf<QItem?>(null) }
     var passed by rememberSaveable(seed) { mutableStateOf<Boolean?>(null) }
+    var plays by remember(seed, round) { mutableIntStateOf(0) }
+    val limit = progress.listenLimit
     val finished = round >= ROUNDS
 
-    // Play each new question automatically.
+    // Play each new question automatically (this counts as the first listen).
     LaunchedEffect(seed, round) {
         if (!finished) {
             delay(350)
+            plays = 1
             speaker.speak(quiz[round].answer)
         }
     }
@@ -114,7 +118,19 @@ fun QuizScreen(lesson: Lesson, speaker: Speaker, progress: Progress, onBack: () 
                 } else {
                     val q = quiz[round]
                     QuestionHeader(round, score)
-                    BigSpeakerButton { speaker.speak(q.answer) }
+                    ListenLimitPicker(limit) { progress.updateListenLimit(it) }
+                    val canListen = limit == 0 || plays < limit
+                    BigSpeakerButton(
+                        enabled = canListen && picked == null,
+                        label = when {
+                            limit == 0 -> stringResource(R.string.play_again)
+                            canListen -> stringResource(R.string.play_again) + " · " + stringResource(R.string.listens_left, limit - plays)
+                            else -> stringResource(R.string.no_listens)
+                        },
+                    ) {
+                        plays++
+                        speaker.speak(q.answer)
+                    }
                     Text(
                         stringResource(R.string.quiz_question),
                         style = MaterialTheme.typography.titleLarge,
@@ -177,7 +193,30 @@ private fun QuestionHeader(round: Int, score: Int) {
 }
 
 @Composable
-private fun BigSpeakerButton(onClick: () -> Unit) {
+private fun ListenLimitPicker(limit: Int, onPick: (Int) -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text("🎧 " + stringResource(R.string.listen_limit), style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold, color = Garden.GreenDark)
+        listOf(1, 2, 3, 0).forEach { n ->
+            val sel = n == limit
+            val shape = RoundedCornerShape(50)
+            Text(
+                if (n == 0) "∞" else "×$n",
+                color = if (sel) Color.White else Garden.GreenDark,
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier
+                    .clip(shape)
+                    .background(if (sel) Garden.Orange else Color.White)
+                    .border(1.5.dp, if (sel) Garden.Orange else Garden.Mint, shape)
+                    .clickable { onPick(n) }
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
+            )
+        }
+    }
+}
+
+@Composable
+private fun BigSpeakerButton(enabled: Boolean, label: String, onClick: () -> Unit) {
     var pressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(if (pressed) 0.9f else 1f, label = "speaker")
     LaunchedEffect(pressed) { if (pressed) { delay(150); pressed = false } }
@@ -187,11 +226,11 @@ private fun BigSpeakerButton(onClick: () -> Unit) {
                 .size(110.dp)
                 .scale(scale)
                 .clip(CircleShape)
-                .background(Garden.quizBrush)
-                .clickable { pressed = true; onClick() },
+                .background(if (enabled) Garden.quizBrush else Brush.linearGradient(listOf(Color(0xFFCFCFCF), Color(0xFFB5B5B5))))
+                .clickable(enabled = enabled) { pressed = true; onClick() },
             contentAlignment = Alignment.Center,
-        ) { Text("🔊", fontSize = 46.sp) }
-        Text(stringResource(R.string.play_again), color = Garden.Muted, fontWeight = FontWeight.Bold,
+        ) { Text(if (enabled) "🔊" else "🔇", fontSize = 46.sp) }
+        Text(label, color = Garden.Muted, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 6.dp))
     }
 }

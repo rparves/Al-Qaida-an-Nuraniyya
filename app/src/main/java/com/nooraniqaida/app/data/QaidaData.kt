@@ -1,12 +1,43 @@
 package com.nooraniqaida.app.data
 
-import com.nooraniqaida.app.R
 
-enum class Makhraj(val titleRes: Int, val descRes: Int) {
-    JAWF(R.string.makhraj_jawf, R.string.makhraj_jawf_desc),
-    HALQ(R.string.makhraj_halq, R.string.makhraj_halq_desc),
-    LISAN(R.string.makhraj_lisan, R.string.makhraj_lisan_desc),
-    SHAFATAN(R.string.makhraj_shafatan, R.string.makhraj_shafatan_desc),
+/**
+ * The detailed makharij (articulation points). [x] and [y] place the point on the
+ * mouth-and-throat diagram (100 x 90 design units).
+ */
+enum class Makhraj(val title: L, val desc: L, val x: Float, val y: Float) {
+    JAWF(L("Jawf", "জাওফ", "الجوف"),
+        L("The empty space of the mouth and throat, for the long vowels", "মুখ ও গলার ফাঁকা জায়গা, দীর্ঘ স্বরের জন্য", "الفراغ الممتد في الفم والحلق، لحروف المد"), 40f, 48f),
+    AQSA_HALQ(L("Deepest part of the throat", "গলার একেবারে গভীর অংশ", "أقصى الحلق"),
+        L("From the bottom of the throat, near the chest", "গলার সবচেয়ে নিচের অংশ থেকে, বুকের কাছে", "من أبعد الحلق مما يلي الصدر"), 60f, 80f),
+    WASAT_HALQ(L("Middle of the throat", "গলার মাঝখান", "وسط الحلق"),
+        L("From the middle of the throat", "গলার মাঝখান থেকে", "من وسط الحلق"), 60f, 69f),
+    ADNA_HALQ(L("Top of the throat", "গলার ওপরের অংশ", "أدنى الحلق"),
+        L("From the part of the throat nearest the mouth", "গলার যে অংশ মুখের সবচেয়ে কাছে", "من أدنى الحلق مما يلي الفم"), 58f, 57f),
+    LAHAT_QAF(L("Back of the tongue (qaf)", "জিহ্বার গোড়া (ক্বফ)", "أقصى اللسان (القاف)"),
+        L("The very back of the tongue against the soft palate", "জিহ্বার একেবারে গোড়া, নরম তালুর সাথে", "أقصى اللسان مع ما يحاذيه من الحنك الأعلى"), 53f, 44f),
+    LAHAT_KAF(L("Back of the tongue (kaf)", "জিহ্বার গোড়া (কাফ)", "أقصى اللسان (الكاف)"),
+        L("The back of the tongue, a little forward of qaf", "জিহ্বার গোড়া, ক্বফের সামান্য সামনে", "أقصى اللسان أسفل مخرج القاف قليلاً"), 47f, 42f),
+    WASAT_LISAN(L("Middle of the tongue", "জিহ্বার মাঝখান", "وسط اللسان"),
+        L("The middle of the tongue against the hard palate", "জিহ্বার মাঝখান, শক্ত তালুর সাথে", "وسط اللسان مع ما يحاذيه من الحنك الأعلى"), 37f, 40f),
+    HAFAT_DAD(L("Side of the tongue", "জিহ্বার পাশ", "حافة اللسان"),
+        L("One side of the tongue against the upper molars", "জিহ্বার এক পাশ, ওপরের মাড়ির দাঁতের সাথে", "إحدى حافتي اللسان مع الأضراس العليا"), 31f, 45f),
+    TARAF_LAM(L("Edge of the tongue tip (lam)", "জিহ্বার আগার কিনারা (লাম)", "حافة طرف اللسان (اللام)"),
+        L("The front edges of the tongue against the gum ridge", "জিহ্বার সামনের কিনারা, ওপরের মাড়ির সাথে", "أدنى حافتي اللسان إلى منتهى طرفه مع لثة الأسنان العليا"), 25f, 43f),
+    TARAF_NOON(L("Tip of the tongue (noon)", "জিহ্বার আগা (নূন)", "طرف اللسان (النون)"),
+        L("The tip of the tongue, just below the point of lam", "জিহ্বার আগা, লামের জায়গার সামান্য নিচে", "طرف اللسان تحت مخرج اللام قليلاً"), 22f, 44f),
+    TARAF_RA(L("Tip of the tongue (raa)", "জিহ্বার আগা (রা)", "طرف اللسان (الراء)"),
+        L("The tip of the tongue with a little of its back, near noon", "জিহ্বার আগা ও পিঠের সামান্য অংশ, নূনের কাছে", "طرف اللسان مع ظهره قريباً من مخرج النون"), 23.5f, 45.5f),
+    NITAI(L("Tongue tip and upper tooth roots", "জিহ্বার আগা ও ওপরের দাঁতের গোড়া", "النطع"),
+        L("The tongue tip against the roots of the upper front teeth", "জিহ্বার আগা, ওপরের সামনের দাঁতের গোড়ার সাথে", "طرف اللسان مع أصول الثنايا العليا"), 18.5f, 44.5f),
+    ASALI(L("Whistling letters", "শিস দেওয়া হরফ", "حروف الصفير"),
+        L("The tongue tip near the lower front teeth, with a whistle", "জিহ্বার আগা নিচের সামনের দাঁতের কাছে, শিসের মতো", "طرف اللسان مع ما بين الثنايا السفلى، مع صفير"), 17f, 50.5f),
+    LITHAWI(L("Tongue tip and upper tooth edges", "জিহ্বার আগা ও ওপরের দাঁতের কিনারা", "اللثوية"),
+        L("The tongue tip against the edges of the upper front teeth", "জিহ্বার আগা, ওপরের সামনের দাঁতের কিনারার সাথে", "طرف اللسان مع أطراف الثنايا العليا"), 14.5f, 47.5f),
+    SHAFAH_FA(L("Lower lip and upper teeth", "নিচের ঠোঁট ও ওপরের দাঁত", "باطن الشفة السفلى"),
+        L("The inside of the lower lip against the upper front teeth", "নিচের ঠোঁটের ভেতরের অংশ, ওপরের সামনের দাঁতের সাথে", "باطن الشفة السفلى مع أطراف الثنايا العليا"), 12f, 49f),
+    SHAFATAN(L("Both lips", "দুই ঠোঁট", "الشفتان"),
+        L("Both lips: closed for baa and meem, rounded for waaw", "দুই ঠোঁট: বা ও মীমে বন্ধ, ওয়াওতে গোল", "الشفتان: بانطباقهما للباء والميم، وبانفتاحهما للواو"), 9f, 48f),
 }
 
 /** Text in the three interface languages. */
@@ -54,36 +85,38 @@ data class Lesson(
  */
 object Qaida {
 
+    // Names are in the short, stopped form used when teaching the Qaida (أَلِفْ، بَا، تَا…),
+    // so the voice never reads them with case endings like "alifun".
     val letters: List<Harf> = listOf(
-        Harf("alif", "ا", "أَلِف", "Alif", "আলিফ", "", "", Makhraj.JAWF, vowelOnly = true),
-        Harf("ba", "ب", "بَاء", "Baa", "বা", "b", "ব", Makhraj.SHAFATAN),
-        Harf("ta", "ت", "تَاء", "Taa", "তা", "t", "ত", Makhraj.LISAN),
-        Harf("tha", "ث", "ثَاء", "Thaa", "ছা", "th", "ছ", Makhraj.LISAN),
-        Harf("jeem", "ج", "جِيم", "Jeem", "জীম", "j", "জ", Makhraj.LISAN),
-        Harf("hha", "ح", "حَاء", "Ḥaa", "হা", "ḥ", "হ", Makhraj.HALQ),
-        Harf("kha", "خ", "خَاء", "Khaa", "খা", "kh", "খ", Makhraj.HALQ),
-        Harf("dal", "د", "دَال", "Daal", "দাল", "d", "দ", Makhraj.LISAN),
-        Harf("dhal", "ذ", "ذَال", "Dhaal", "যাল", "dh", "য", Makhraj.LISAN),
-        Harf("ra", "ر", "رَاء", "Raa", "রা", "r", "র", Makhraj.LISAN),
-        Harf("zay", "ز", "زَاي", "Zaay", "যা", "z", "য", Makhraj.LISAN),
-        Harf("seen", "س", "سِين", "Seen", "সীন", "s", "স", Makhraj.LISAN),
-        Harf("sheen", "ش", "شِين", "Sheen", "শীন", "sh", "শ", Makhraj.LISAN),
-        Harf("sad", "ص", "صَاد", "Ṣaad", "সোয়াদ", "ṣ", "স", Makhraj.LISAN),
-        Harf("dad", "ض", "ضَاد", "Ḍaad", "দোয়াদ", "ḍ", "দ্ব", Makhraj.LISAN),
-        Harf("tta", "ط", "طَاء", "Ṭaa", "ত্বোয়া", "ṭ", "ত্ব", Makhraj.LISAN),
-        Harf("zza", "ظ", "ظَاء", "Ẓaa", "যোয়া", "ẓ", "য", Makhraj.LISAN),
-        Harf("ain", "ع", "عَيْن", "ʿAyn", "আইন", "ʿ", "", Makhraj.HALQ, vowelOnly = true),
-        Harf("ghain", "غ", "غَيْن", "Ghayn", "গাইন", "gh", "গ", Makhraj.HALQ),
-        Harf("fa", "ف", "فَاء", "Faa", "ফা", "f", "ফ", Makhraj.SHAFATAN),
-        Harf("qaf", "ق", "قَاف", "Qaaf", "ক্বফ", "q", "ক্ব", Makhraj.LISAN),
-        Harf("kaf", "ك", "كَاف", "Kaaf", "কাফ", "k", "ক", Makhraj.LISAN),
-        Harf("lam", "ل", "لَام", "Laam", "লাম", "l", "ল", Makhraj.LISAN),
-        Harf("meem", "م", "مِيم", "Meem", "মীম", "m", "ম", Makhraj.SHAFATAN),
-        Harf("noon", "ن", "نُون", "Noon", "নূন", "n", "ন", Makhraj.LISAN),
-        Harf("waw", "و", "وَاو", "Waaw", "ওয়াও", "w", "ওয়", Makhraj.SHAFATAN),
-        Harf("ha", "ه", "هَاء", "Haa", "হা", "h", "হ", Makhraj.HALQ),
-        Harf("hamza", "ء", "هَمْزَة", "Hamzah", "হামযা", "ʾ", "", Makhraj.HALQ, vowelOnly = true),
-        Harf("ya", "ي", "يَاء", "Yaa", "ইয়া", "y", "ইয়", Makhraj.LISAN),
+        Harf("alif", "ا", "أَلِفْ", "Alif", "আলিফ", "", "", Makhraj.JAWF, vowelOnly = true),
+        Harf("ba", "ب", "بَا", "Baa", "বা", "b", "ব", Makhraj.SHAFATAN),
+        Harf("ta", "ت", "تَا", "Taa", "তা", "t", "ত", Makhraj.NITAI),
+        Harf("tha", "ث", "ثَا", "Thaa", "ছা", "th", "ছ", Makhraj.LITHAWI),
+        Harf("jeem", "ج", "جِيمْ", "Jeem", "জীম", "j", "জ", Makhraj.WASAT_LISAN),
+        Harf("hha", "ح", "حَا", "Ḥaa", "হা", "ḥ", "হ", Makhraj.WASAT_HALQ),
+        Harf("kha", "خ", "خَا", "Khaa", "খা", "kh", "খ", Makhraj.ADNA_HALQ),
+        Harf("dal", "د", "دَالْ", "Daal", "দাল", "d", "দ", Makhraj.NITAI),
+        Harf("dhal", "ذ", "ذَالْ", "Dhaal", "যাল", "dh", "য", Makhraj.LITHAWI),
+        Harf("ra", "ر", "رَا", "Raa", "রা", "r", "র", Makhraj.TARAF_RA),
+        Harf("zay", "ز", "زَا", "Zaa", "যা", "z", "য", Makhraj.ASALI),
+        Harf("seen", "س", "سِينْ", "Seen", "সীন", "s", "স", Makhraj.ASALI),
+        Harf("sheen", "ش", "شِينْ", "Sheen", "শীন", "sh", "শ", Makhraj.WASAT_LISAN),
+        Harf("sad", "ص", "صَادْ", "Ṣaad", "সোয়াদ", "ṣ", "স", Makhraj.ASALI),
+        Harf("dad", "ض", "ضَادْ", "Ḍaad", "দোয়াদ", "ḍ", "দ্ব", Makhraj.HAFAT_DAD),
+        Harf("tta", "ط", "طَا", "Ṭaa", "ত্বোয়া", "ṭ", "ত্ব", Makhraj.NITAI),
+        Harf("zza", "ظ", "ظَا", "Ẓaa", "যোয়া", "ẓ", "য", Makhraj.LITHAWI),
+        Harf("ain", "ع", "عَيْنْ", "ʿAyn", "আইন", "ʿ", "", Makhraj.WASAT_HALQ, vowelOnly = true),
+        Harf("ghain", "غ", "غَيْنْ", "Ghayn", "গাইন", "gh", "গ", Makhraj.ADNA_HALQ),
+        Harf("fa", "ف", "فَا", "Faa", "ফা", "f", "ফ", Makhraj.SHAFAH_FA),
+        Harf("qaf", "ق", "قَافْ", "Qaaf", "ক্বফ", "q", "ক্ব", Makhraj.LAHAT_QAF),
+        Harf("kaf", "ك", "كَافْ", "Kaaf", "কাফ", "k", "ক", Makhraj.LAHAT_KAF),
+        Harf("lam", "ل", "لَامْ", "Laam", "লাম", "l", "ল", Makhraj.TARAF_LAM),
+        Harf("meem", "م", "مِيمْ", "Meem", "মীম", "m", "ম", Makhraj.SHAFATAN),
+        Harf("noon", "ن", "نُونْ", "Noon", "নূন", "n", "ন", Makhraj.TARAF_NOON),
+        Harf("waw", "و", "وَاوْ", "Waaw", "ওয়াও", "w", "ওয়", Makhraj.SHAFATAN),
+        Harf("ha", "ه", "هَا", "Haa", "হা", "h", "হ", Makhraj.AQSA_HALQ),
+        Harf("hamza", "ء", "هَمْزَهْ", "Hamzah", "হামযা", "ʾ", "", Makhraj.AQSA_HALQ, vowelOnly = true),
+        Harf("ya", "ي", "يَا", "Yaa", "ইয়া", "y", "ইয়", Makhraj.WASAT_LISAN),
     )
     private val byId = letters.associateBy { it.id }
 

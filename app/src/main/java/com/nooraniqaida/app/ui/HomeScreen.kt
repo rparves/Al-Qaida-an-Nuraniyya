@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -57,6 +58,7 @@ fun HomeScreen(
     val mastered = progress.mastered
     var filter by rememberSaveable { mutableIntStateOf(0) } // 0 all, 1 remaining, 2 mastered
     var confirmReset by remember { mutableStateOf(false) }
+    var showVoice by remember { mutableStateOf(false) }
 
     val shown = when (filter) {
         1 -> lessons.filter { it.number !in mastered }
@@ -74,7 +76,7 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            item(span = full) { HeaderCard(progress) { confirmReset = true } }
+            item(span = full) { HeaderCard(progress, onVoice = { showVoice = true }) { confirmReset = true } }
 
             when (speaker.status) {
                 Speaker.Status.MISSING_ARABIC -> item(span = full) {
@@ -127,6 +129,8 @@ fun HomeScreen(
         }
     }
 
+    if (showVoice) VoiceDialog(speaker) { showVoice = false }
+
     if (confirmReset) {
         AlertDialog(
             onDismissRequest = { confirmReset = false },
@@ -146,7 +150,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun HeaderCard(progress: Progress, onReset: () -> Unit) {
+private fun HeaderCard(progress: Progress, onVoice: () -> Unit, onReset: () -> Unit) {
     val cheers = stringArrayResource(R.array.cheers)
     var cheer by remember { mutableStateOf<String?>(null) }
     var bounce by remember { mutableStateOf(false) }
@@ -198,6 +202,11 @@ private fun HeaderCard(progress: Progress, onReset: () -> Unit) {
                 "⭐ " + stringResource(R.string.stars, progress.stars),
                 Garden.YellowSoft, Garden.Brown, Garden.Yellow,
                 Modifier.align(Alignment.CenterVertically),
+            )
+            Pill(
+                "🎙️ " + stringResource(R.string.voice_settings),
+                Garden.MintSoft, Garden.GreenDark, Garden.Mint,
+                Modifier.align(Alignment.CenterVertically).clip(RoundedCornerShape(50)).clickable(onClick = onVoice),
             )
             IconButton(onClick = onReset, modifier = Modifier.align(Alignment.CenterVertically)) {
                 Icon(Icons.Filled.Refresh, stringResource(R.string.reset_progress), tint = Garden.Orange)
@@ -437,4 +446,59 @@ private fun LessonCard(
             EmojiButton("🧠") { onQuiz(lesson.number) }
         }
     }
+}
+
+
+@Composable
+private fun VoiceDialog(speaker: Speaker, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("🎙️ " + stringResource(R.string.voice_title), fontWeight = FontWeight.ExtraBold) },
+        text = {
+            Column(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState())) {
+                Text(stringResource(R.string.voice_hint), style = MaterialTheme.typography.bodySmall, color = Garden.Muted)
+                Spacer(Modifier.height(8.dp))
+                if (speaker.voices.isEmpty()) {
+                    Text(stringResource(R.string.no_voices), color = Garden.Red)
+                }
+                speaker.voices.forEachIndexed { i, name ->
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(14.dp))
+                            .clickable { speaker.selectVoice(name) }
+                            .padding(vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        RadioButton(selected = name == speaker.voiceName, onClick = { speaker.selectVoice(name) })
+                        Column(Modifier.weight(1f)) {
+                            Text(stringResource(R.string.voice_n, i + 1), fontWeight = FontWeight.Bold)
+                            Text(
+                                name + if (name.contains("network")) " · " + stringResource(R.string.voice_online) else "",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Garden.Muted,
+                            )
+                        }
+                        TextButton(onClick = { speaker.selectVoice(name); speaker.say("أَلِفْ، بَا، تَا") }) {
+                            Text("▶ " + stringResource(R.string.voice_test))
+                        }
+                    }
+                }
+                Spacer(Modifier.height(10.dp))
+                Text(stringResource(R.string.pitch_label), fontWeight = FontWeight.Bold)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(stringResource(R.string.deeper), style = MaterialTheme.typography.labelSmall)
+                    Slider(
+                        value = speaker.pitch,
+                        onValueChange = { speaker.updatePitch(it) },
+                        onValueChangeFinished = { speaker.say("بِسْمِ اللَّهِ") },
+                        valueRange = 0.6f..1.2f,
+                        modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                    )
+                    Text(stringResource(R.string.higher), style = MaterialTheme.typography.labelSmall)
+                }
+            }
+        },
+        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.done)) } },
+    )
 }

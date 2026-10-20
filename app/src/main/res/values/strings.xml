@@ -90,6 +90,23 @@
     <string name="makhraj_lisan_desc">Pronounced with the tongue</string>
     <string name="makhraj_shafatan">Shafatan (lips)</string>
     <string name="makhraj_shafatan_desc">Pronounced with the lips</string>
+    <string name="spell">Spell</string>
+    <string name="voice_settings">Voice</string>
+    <string name="voice_title">Choose the reciter voice</string>
+    <string name="voice_hint">Phones don’t label which voices are male. Try each one and pick the one that sounds right.</string>
+    <string name="voice_n">Voice %1$d</string>
+    <string name="voice_online">needs internet</string>
+    <string name="voice_test">Test</string>
+    <string name="pitch_label">Voice depth</string>
+    <string name="deeper">Deeper</string>
+    <string name="higher">Higher</string>
+    <string name="no_voices">No Arabic voices found. Install the Arabic voice first.</string>
+    <string name="done">Done</string>
+    <string name="listen_limit">Listens per question</string>
+    <string name="listens_left">%1$d left</string>
+    <string name="no_listens">No listens left</string>
+    <string name="play_title">Hear the title</string>
+    <string name="makharij_title">Where the sound comes from</string>
     <string-array name="cheers">
         <item>You’re doing great!</item>
         <item>MashaAllah, keep going!</item>

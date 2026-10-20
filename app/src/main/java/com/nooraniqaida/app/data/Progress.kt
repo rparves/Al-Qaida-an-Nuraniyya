@@ -15,6 +15,14 @@ class Progress(context: Context) {
         private set
     var stars by mutableStateOf(prefs.getInt("stars", 0))
         private set
+    /** How many times the quiz sound may be played per question; 0 means unlimited. */
+    var listenLimit by mutableStateOf(prefs.getInt("listen_limit", 0))
+        private set
+
+    fun updateListenLimit(value: Int) {
+        listenLimit = value
+        prefs.edit().putInt("listen_limit", value).apply()
+    }
 
     fun updateName(value: String) {
         name = value.take(30)
@@ -40,7 +48,8 @@ class Progress(context: Context) {
 
     fun reset() {
         val keep = name
-        prefs.edit().clear().putString("name", keep).apply()
+        val limit = listenLimit
+        prefs.edit().clear().putString("name", keep).putInt("listen_limit", limit).apply()
         mastered = emptySet()
         stars = 0
     }
