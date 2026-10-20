@@ -52,6 +52,18 @@ android {
 
     packaging {
         resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" }
+        // Size: store the ML Kit native library compressed (roughly halves the download).
+        jniLibs { useLegacyPackaging = true }
+    }
+
+    // Size: one APK per phone CPU type instead of a universal APK with all four.
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a")
+            isUniversalApk = false
+        }
     }
 }
 

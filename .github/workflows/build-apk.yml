@@ -26,8 +26,10 @@ jobs:
       - name: Build release APK
         run: gradle :app:assembleRelease --no-daemon --stacktrace
 
-      - name: Rename APK
-        run: cp app/build/outputs/apk/release/app-release.apk NooraniQaida.apk
+      - name: Rename APKs
+        run: |
+          cp app/build/outputs/apk/release/app-arm64-v8a-release.apk NooraniQaida.apk
+          cp app/build/outputs/apk/release/app-armeabi-v7a-release.apk NooraniQaida-32bit.apk
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
@@ -35,4 +37,6 @@ jobs:
           tag_name: v1.0.${{ github.run_number }}
           name: Noorani Qaida v1.0 (build ${{ github.run_number }})
           make_latest: "true"
-          files: NooraniQaida.apk
+          files: |
+            NooraniQaida.apk
+            NooraniQaida-32bit.apk
