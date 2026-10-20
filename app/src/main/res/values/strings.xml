@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Noorani Qaida</string>
+    <string name="switch_language">বাংলা</string>
+    <string name="lessons">Lessons</string>
+    <string name="lesson_n">Lesson %1$d</string>
+
+    <string name="l1_title">Single letters</string>
+    <string name="l1_desc">The 29 Arabic letters with correct pronunciation</string>
+    <string name="l2_title">Muqatta’at letters</string>
+    <string name="l2_desc">Disjointed letters that open some surahs</string>
+    <string name="l3_title">Harakat</string>
+    <string name="l3_desc">Fatha, kasra and damma</string>
+    <string name="l4_title">Tanween</string>
+    <string name="l4_desc">Double fatha, double kasra and double damma</string>
+    <string name="l5_title">Madd (long vowels)</string>
+    <string name="l5_desc">Stretching the sound with alif, yaa and waaw</string>
+    <string name="l6_title">Sukoon (jazm)</string>
+    <string name="l6_desc">Joining a letter that has no vowel</string>
+    <string name="l7_title">Tashdeed</string>
+    <string name="l7_desc">Doubled letters, read with stress</string>
+    <string name="writing_title">Writing practice</string>
+    <string name="writing_desc">Draw a letter and on-device AI checks it</string>
+
+    <string name="listen">Listen</string>
+    <string name="say_it">Say it</string>
+    <string name="listening">Listening…</string>
+    <string name="correct">Well done!</string>
+    <string name="try_again">Not quite. Listen and try again.</string>
+    <string name="heard_x">Heard: %1$s</string>
+    <string name="mic_permission_needed">Microphone permission is needed to check your pronunciation.</string>
+    <string name="speech_unavailable">Speech recognition isn’t available on this device.</string>
+    <string name="speech_lang_missing">Arabic speech recognition isn’t installed. Add Arabic in your device’s voice typing settings.</string>
+    <string name="speech_no_match">Couldn’t catch that. Speak clearly and try again.</string>
+    <string name="speech_network">Network error. Connect to the internet or install offline Arabic speech.</string>
+    <string name="speech_error">Speech recognition error (%1$d)</string>
+
+    <string name="tts_missing_title">Arabic voice not installed</string>
+    <string name="tts_missing_desc">Install the Arabic voice for your text-to-speech engine to hear the letters.</string>
+    <string name="install_voice">Install voice</string>
+    <string name="tts_unavailable">No text-to-speech engine found. Install Google Speech Services.</string>
+
+    <string name="play_all">Play all</string>
+    <string name="stop">Stop</string>
+    <string name="slow">Slow</string>
+    <string name="back">Back</string>
+    <string name="of_letter">Letter: %1$s</string>
+
+    <string name="clear">Clear</string>
+    <string name="check">Check</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="show_guide">Show tracing guide</string>
+    <string name="model_checking">Preparing handwriting model…</string>
+    <string name="model_downloading">Downloading handwriting model (one time only)…</string>
+    <string name="model_failed">Couldn’t download the handwriting model. Check your internet connection.</string>
+    <string name="retry">Retry</string>
+    <string name="write_x">Write: %1$s</string>
+    <string name="write_correct">Correct! That’s %1$s</string>
+    <string name="write_wrong">That looks like %1$s. Try again.</string>
+    <string name="write_unknown">Couldn’t recognise it. Try again.</string>
+
+    <string name="makhraj_label">Makhraj: %1$s</string>
+    <string name="makhraj_jawf">Jawf</string>
+    <string name="makhraj_jawf_desc">The empty space of the mouth and throat, used for long vowels</string>
+    <string name="makhraj_halq">Halq (throat)</string>
+    <string name="makhraj_halq_desc">Pronounced from the throat</string>
+    <string name="makhraj_lisan">Lisan (tongue)</string>
+    <string name="makhraj_lisan_desc">Pronounced with the tongue</string>
+    <string name="makhraj_shafatan">Shafatan (lips)</string>
+    <string name="makhraj_shafatan_desc">Pronounced with the lips</string>
+</resources>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">নূরানী কায়দা</string>
+    <string name="switch_language">English</string>
+    <string name="lessons">পাঠসমূহ</string>
+    <string name="lesson_n">পাঠ %1$d</string>
+
+    <string name="l1_title">একক হরফ</string>
+    <string name="l1_desc">আরবি ২৯টি হরফ সঠিক উচ্চারণে</string>
+    <string name="l2_title">হুরূফে মুকাত্তাআত</string>
+    <string name="l2_desc">কিছু সূরার শুরুতে থাকা বিচ্ছিন্ন হরফ</string>
+    <string name="l3_title">হরকত</string>
+    <string name="l3_desc">যবর, যের ও পেশ</string>
+    <string name="l4_title">তানভীন</string>
+    <string name="l4_desc">দুই যবর, দুই যের ও দুই পেশ</string>
+    <string name="l5_title">মদ (দীর্ঘ স্বর)</string>
+    <string name="l5_desc">আলিফ, ইয়া ও ওয়াও দিয়ে টেনে পড়া</string>
+    <string name="l6_title">জযম (সুকূন)</string>
+    <string name="l6_desc">স্বরবিহীন হরফ মিলিয়ে পড়া</string>
+    <string name="l7_title">তাশদীদ</string>
+    <string name="l7_desc">দ্বিত্ব হরফ জোর দিয়ে পড়া</string>
+    <string name="writing_title">লেখার অনুশীলন</string>
+    <string name="writing_desc">একটি হরফ আঁকুন, ডিভাইসের এআই যাচাই করবে</string>
+
+    <string name="listen">শুনুন</string>
+    <string name="say_it">বলুন</string>
+    <string name="listening">শুনছি…</string>
+    <string name="correct">চমৎকার!</string>
+    <string name="try_again">পুরোপুরি হয়নি। আবার শুনে চেষ্টা করুন।</string>
+    <string name="heard_x">শোনা গেছে: %1$s</string>
+    <string name="mic_permission_needed">উচ্চারণ যাচাই করতে মাইক্রোফোনের অনুমতি প্রয়োজন।</string>
+    <string name="speech_unavailable">এই ডিভাইসে স্পিচ রিকগনিশন নেই।</string>
+    <string name="speech_lang_missing">আরবি স্পিচ রিকগনিশন ইনস্টল করা নেই। ডিভাইসের ভয়েস টাইপিং সেটিংসে আরবি যোগ করুন।</string>
+    <string name="speech_no_match">বোঝা যায়নি। স্পষ্ট করে আবার বলুন।</string>
+    <string name="speech_network">নেটওয়ার্ক সমস্যা। ইন্টারনেট সংযোগ দিন বা অফলাইন আরবি স্পিচ ইনস্টল করুন।</string>
+    <string name="speech_error">স্পিচ রিকগনিশন ত্রুটি (%1$d)</string>
+
+    <string name="tts_missing_title">আরবি ভয়েস ইনস্টল করা নেই</string>
+    <string name="tts_missing_desc">হরফগুলো শুনতে আপনার টেক্সট-টু-স্পিচ ইঞ্জিনে আরবি ভয়েস ইনস্টল করুন।</string>
+    <string name="install_voice">ভয়েস ইনস্টল করুন</string>
+    <string name="tts_unavailable">কোনো টেক্সট-টু-স্পিচ ইঞ্জিন পাওয়া যায়নি। Google Speech Services ইনস্টল করুন।</string>
+
+    <string name="play_all">সব চালান</string>
+    <string name="stop">থামুন</string>
+    <string name="slow">ধীরে</string>
+    <string name="back">পেছনে</string>
+    <string name="of_letter">হরফ: %1$s</string>
+
+    <string name="clear">মুছুন</string>
+    <string name="check">যাচাই</string>
+    <string name="next">পরের</string>
+    <string name="previous">আগের</string>
+    <string name="show_guide">ট্রেসিং গাইড দেখান</string>
+    <string name="model_checking">হাতের লেখার মডেল প্রস্তুত হচ্ছে…</string>
+    <string name="model_downloading">হাতের লেখার মডেল ডাউনলোড হচ্ছে (শুধু একবার)…</string>
+    <string name="model_failed">মডেল ডাউনলোড করা যায়নি। ইন্টারনেট সংযোগ দেখুন।</string>
+    <string name="retry">আবার চেষ্টা</string>
+    <string name="write_x">লিখুন: %1$s</string>
+    <string name="write_correct">সঠিক! এটি %1$s</string>
+    <string name="write_wrong">দেখে মনে হচ্ছে %1$s। আবার চেষ্টা করুন।</string>
+    <string name="write_unknown">চেনা যায়নি। আবার চেষ্টা করুন।</string>
+
+    <string name="makhraj_label">মাখরাজ: %1$s</string>
+    <string name="makhraj_jawf">জাওফ</string>
+    <string name="makhraj_jawf_desc">মুখ ও গলার ফাঁকা স্থান, দীর্ঘ স্বরের জন্য</string>
+    <string name="makhraj_halq">হলক (কণ্ঠনালি)</string>
+    <string name="makhraj_halq_desc">গলা থেকে উচ্চারিত</string>
+    <string name="makhraj_lisan">লিসান (জিহ্বা)</string>
+    <string name="makhraj_lisan_desc">জিহ্বা দিয়ে উচ্চারিত</string>
+    <string name="makhraj_shafatan">শাফাতান (দুই ঠোঁট)</string>
+    <string name="makhraj_shafatan_desc">ঠোঁট দিয়ে উচ্চারিত</string>
+</resources>
