@@ -36,6 +36,8 @@ enum class Makhraj(val title: L, val desc: L, val x: Float, val y: Float) {
         L("The tongue tip against the edges of the upper front teeth", "জিহ্বার আগা, ওপরের সামনের দাঁতের কিনারার সাথে", "طرف اللسان مع أطراف الثنايا العليا"), 14.5f, 47.5f),
     SHAFAH_FA(L("Lower lip and upper teeth", "নিচের ঠোঁট ও ওপরের দাঁত", "باطن الشفة السفلى"),
         L("The inside of the lower lip against the upper front teeth", "নিচের ঠোঁটের ভেতরের অংশ, ওপরের সামনের দাঁতের সাথে", "باطن الشفة السفلى مع أطراف الثنايا العليا"), 12f, 49f),
+    KHAYSHUM(L("Khayshum (nasal passage)", "খাইশূম (নাকের বাঁশি)", "الخيشوم"),
+        L("The back of the nose: the source of ghunnah in noon and meem", "নাকের পেছনের অংশ: নূন ও মীমের গুন্নাহ এখান থেকে", "أقصى الأنف، وهو مخرج الغنة"), 27f, 31f),
     SHAFATAN(L("Both lips", "দুই ঠোঁট", "الشفتان"),
         L("Both lips: closed for baa and meem, rounded for waaw", "দুই ঠোঁট: বা ও মীমে বন্ধ, ওয়াওতে গোল", "الشفتان: بانطباقهما للباء والميم، وبانفتاحهما للواو"), 9f, 48f),
 }
@@ -67,6 +69,7 @@ data class QItem(
     val bn: String,              // Bangla transliteration
     val accept: List<String>,    // Arabic text the speech recogniser may return for a correct attempt
     val harf: Harf? = null,
+    val stretch: Boolean = false, // madd items: read slower so the 2-count stretch is heard
 )
 
 data class Lesson(
@@ -77,6 +80,7 @@ data class Lesson(
     val icon: String,
     val columns: Int,
     val items: List<QItem>,
+    val rule: L? = null,
 )
 
 /**
@@ -156,6 +160,13 @@ object Qaida {
 
     private fun t(ar: String, en: String, bn: String) = Triple(ar, en, bn)
 
+    /**
+     * Rule examples: [say] is written the way the rule is pronounced (idghām, iqlāb,
+     * stopping), so the voice reads the tajweed instead of the spelling.
+     */
+    private fun ph(prefix: String, vararg rows: List<String>) =
+        rows.mapIndexed { i, (ar, en, bn, say) -> QItem("${prefix}_${i + 1}", ar, say, en, bn, listOf(ar, say)) }
+
     // ---------------------------------------------------------------- generated drills
 
     private fun murakkabat(): List<QItem> = listOf(
@@ -199,7 +210,8 @@ object Qaida {
         V.entries.map { v ->
             val s = seat(h, v)
             val text = s + v.tanween
-            QItem("t_${h.id}_${key(v)}", text, text, h.soundEn + v.en + "n", bn(h, v) + "ন", listOf(s + "ن", s), h)
+            val say = if (v == V.A) text + "ا" else text
+            QItem("t_${h.id}_${key(v)}", text, say, h.soundEn + v.en + "n", bn(h, v) + "ন", listOf(s + "ن", s), h)
         }
     }
 
@@ -208,7 +220,7 @@ object Qaida {
         V.entries.map { v ->
             val speak = h.char + v.mark + v.maddLetter
             QItem("k_${h.id}_${key(v)}", h.char + v.standing, speak, h.soundEn + v.enLong, bn(h, v, long = true) + "—",
-                listOf(h.char + v.maddLetter, h.char), h)
+                listOf(h.char + v.maddLetter, h.char), h, stretch = true)
         }
     }
 
@@ -216,7 +228,7 @@ object Qaida {
         V.entries.map { v ->
             val text = h.char + v.mark + v.maddLetter
             QItem("d_${h.id}_${key(v)}", text, text, h.soundEn + v.enLong, bn(h, v, long = true) + "—",
-                listOf(h.char + v.maddLetter, h.char), h)
+                listOf(h.char + v.maddLetter, h.char), h, stretch = true)
         }
     }
 
@@ -344,26 +356,26 @@ object Qaida {
             Lesson(14, "أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوِينِ",
                 L("Noon sakin and tanween", "নূন সাকিন ও তানভীন", "أحكام النون الساكنة والتنوين"),
                 L("Iẓhār, idghām, iqlāb and ikhfāʾ with examples", "ইযহার, ইদগাম, ইক্লাব ও ইখফা উদাহরণসহ", "الإظهار والإدغام والإقلاب والإخفاء"),
-                "👃", 1, words("p14",
-                    t("مِنْ هَادٍ", "Iẓhār: min hādin", "ইযহার: মিন হাদিন"),
-                    t("مَنْ آمَنَ", "Iẓhār: man āmana", "ইযহার: মান আমানা"),
-                    t("مَنْ يَقُولُ", "Idghām: may-yaqūlu", "ইদগাম: মাই-ইয়াক্বূলু"),
-                    t("مِنْ رَبِّهِمْ", "Idghām: mir-rabbihim", "ইদগাম: মির-রাব্বিহিম"),
-                    t("مِنْ بَعْدِ", "Iqlāb: mim-baʿdi", "ইক্লাব: মিম-বা'দি"),
-                    t("سَمِيعٌ بَصِيرٌ", "Iqlāb: samīʿum-baṣīr", "ইক্লাব: সামীউম-বাসীর"),
-                    t("مِنْ تَحْتِهَا", "Ikhfāʾ: min taḥtihā", "ইখফা: মিন তাহতিহা"),
-                    t("أَنْفُسَكُمْ", "Ikhfāʾ: anfusakum", "ইখফা: আনফুসাকুম"),
+                "👃", 1, ph("p14",
+                    listOf("مِنْ هَادٍ", "Iẓhār: min hādin", "ইযহার: মিন হাদিন", "مِنْ هَادْ"),
+                    listOf("مَنْ آمَنَ", "Iẓhār: man āmana", "ইযহার: মান আমানা", "مَنْ آمَنْ"),
+                    listOf("مَنْ يَقُولُ", "Idghām: may-yaqūlu", "ইদগাম: মাই-ইয়াক্বূলু", "مَيَّقُولْ"),
+                    listOf("مِنْ رَبِّهِمْ", "Idghām: mir-rabbihim", "ইদগাম: মির-রাব্বিহিম", "مِرَّبِّهِمْ"),
+                    listOf("مِنْ بَعْدِ", "Iqlāb: mim-baʿdi", "ইক্লাব: মিম-বা'দি", "مِمْبَعْدْ"),
+                    listOf("سَمِيعٌ بَصِيرٌ", "Iqlāb: samīʿum-baṣīr", "ইক্লাব: সামীউম-বাসীর", "سَمِيعُمْ بَصِيرْ"),
+                    listOf("مِنْ تَحْتِهَا", "Ikhfāʾ: min taḥtihā", "ইখফা: মিন তাহতিহা", "مِنْ تَحْتِهَا"),
+                    listOf("أَنْفُسَكُمْ", "Ikhfāʾ: anfusakum", "ইখফা: আনফুসাকুম", "أَنْفُسَكُمْ"),
                 )),
             Lesson(15, "أَحْكَامُ الْمِيمِ السَّاكِنَةِ",
                 L("Meem sakin", "মীম সাকিন", "أحكام الميم الساكنة"),
                 L("Ikhfāʾ, idghām and iẓhār shafawī", "ইখফা, ইদগাম ও ইযহার শাফাবী", "الإخفاء والإدغام والإظهار الشفوي"),
-                "👄", 1, words("p15",
-                    t("تَرْمِيهِمْ بِحِجَارَةٍ", "Ikhfāʾ shafawī: tarmīhim biḥijāratin", "ইখফা শাফাবী: তারমীহিম বিহিজারাতিন"),
-                    t("وَهُمْ بِالْآخِرَةِ", "Ikhfāʾ shafawī: wa hum bil-ākhirah", "ইখফা শাফাবী: ওয়া হুম বিল-আখিরাহ"),
-                    t("لَهُمْ مَا", "Idghām shafawī: lahum-mā", "ইদগাম শাফাবী: লাহুম-মা"),
-                    t("كُنْتُمْ مُؤْمِنِينَ", "Idghām shafawī: kuntum-muʾminīn", "ইদগাম শাফাবী: কুনতুম-মু'মিনীন"),
-                    t("أَلَمْ تَرَ", "Iẓhār shafawī: alam tara", "ইযহার শাফাবী: আলাম তারা"),
-                    t("هُمْ فِيهَا", "Iẓhār shafawī: hum fīhā", "ইযহার শাফাবী: হুম ফীহা"),
+                "👄", 1, ph("p15",
+                    listOf("تَرْمِيهِمْ بِحِجَارَةٍ", "Ikhfāʾ shafawī: tarmīhim biḥijārah", "ইখফা শাফাবী: তারমীহিম বিহিজারাহ", "تَرْمِيهِمْ بِحِجَارَهْ"),
+                    listOf("وَهُمْ بِالْآخِرَةِ", "Ikhfāʾ shafawī: wa hum bil-ākhirah", "ইখফা শাফাবী: ওয়া হুম বিল-আখিরাহ", "وَهُمْ بِالْآخِرَهْ"),
+                    listOf("لَهُمْ مَا", "Idghām shafawī: lahum-mā", "ইদগাম শাফাবী: লাহুম-মা", "لَهُمَّا"),
+                    listOf("كُنْتُمْ مُؤْمِنِينَ", "Idghām shafawī: kuntum-muʾminīn", "ইদগাম শাফাবী: কুনতুম-মু'মিনীন", "كُنْتُمُّؤْمِنِينْ"),
+                    listOf("أَلَمْ تَرَ", "Iẓhār shafawī: alam tara", "ইযহার শাফাবী: আলাম তারা", "أَلَمْ تَرْ"),
+                    listOf("هُمْ فِيهَا", "Iẓhār shafawī: hum fīhā", "ইযহার শাফাবী: হুম ফীহা", "هُمْ فِيهَا"),
                 )),
             Lesson(16, "الْقَلْقَلَةُ",
                 L("Qalqalah", "ক্বলক্বলা", "القلقلة"),
@@ -373,6 +385,6 @@ object Qaida {
                 L("Waqf (stopping)", "ওয়াকফ (থামা)", "الوقف"),
                 L("How a word changes when you stop on it", "শব্দের শেষে থামলে কেমন পড়তে হয়", "الوقف على أواخر الكلمات"),
                 "✋", 2, waqf()),
-        )
+        ).map { it.copy(rule = Tajweed.lessonRules[it.number]) }
     }
 }

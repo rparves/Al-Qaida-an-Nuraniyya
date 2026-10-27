@@ -1,6 +1,10 @@
 package com.nooraniqaida.app.ui
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.FileProvider
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
 import com.nooraniqaida.app.R
+import com.nooraniqaida.app.audio.Recorder
 import com.nooraniqaida.app.audio.Speaker
 import com.nooraniqaida.app.data.Lesson
 import com.nooraniqaida.app.data.Progress
@@ -48,6 +53,7 @@ import kotlinx.coroutines.delay
 fun HomeScreen(
     speaker: Speaker,
     progress: Progress,
+    recorder: Recorder,
     onLesson: (Int) -> Unit,
     onQuiz: (Int) -> Unit,
     onTrace: () -> Unit,
@@ -59,6 +65,7 @@ fun HomeScreen(
     var filter by rememberSaveable { mutableIntStateOf(0) } // 0 all, 1 remaining, 2 mastered
     var confirmReset by remember { mutableStateOf(false) }
     var showVoice by remember { mutableStateOf(false) }
+    var showTeacher by remember { mutableStateOf(false) }
 
     val shown = when (filter) {
         1 -> lessons.filter { it.number !in mastered }
@@ -76,7 +83,7 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            item(span = full) { HeaderCard(progress, onVoice = { showVoice = true }) { confirmReset = true } }
+            item(span = full) { HeaderCard(progress, onVoice = { showVoice = true }, onTeacher = { showTeacher = true }) { confirmReset = true } }
 
             when (speaker.status) {
                 Speaker.Status.MISSING_ARABIC -> item(span = full) {
@@ -130,6 +137,7 @@ fun HomeScreen(
     }
 
     if (showVoice) VoiceDialog(speaker) { showVoice = false }
+    if (showTeacher) TeacherDialog(progress, recorder) { showTeacher = false }
 
     if (confirmReset) {
         AlertDialog(
@@ -150,7 +158,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun HeaderCard(progress: Progress, onVoice: () -> Unit, onReset: () -> Unit) {
+private fun HeaderCard(progress: Progress, onVoice: () -> Unit, onTeacher: () -> Unit, onReset: () -> Unit) {
     val cheers = stringArrayResource(R.array.cheers)
     var cheer by remember { mutableStateOf<String?>(null) }
     var bounce by remember { mutableStateOf(false) }
@@ -207,6 +215,11 @@ private fun HeaderCard(progress: Progress, onVoice: () -> Unit, onReset: () -> U
                 "🎙️ " + stringResource(R.string.voice_settings),
                 Garden.MintSoft, Garden.GreenDark, Garden.Mint,
                 Modifier.align(Alignment.CenterVertically).clip(RoundedCornerShape(50)).clickable(onClick = onVoice),
+            )
+            Pill(
+                "🎓 " + stringResource(R.string.teacher),
+                Garden.PurpleSoft, Garden.Purple, Garden.PurpleLine,
+                Modifier.align(Alignment.CenterVertically).clip(RoundedCornerShape(50)).clickable(onClick = onTeacher),
             )
             IconButton(onClick = onReset, modifier = Modifier.align(Alignment.CenterVertically)) {
                 Icon(Icons.Filled.Refresh, stringResource(R.string.reset_progress), tint = Garden.Orange)
@@ -497,6 +510,54 @@ private fun VoiceDialog(speaker: Speaker, onDismiss: () -> Unit) {
                     )
                     Text(stringResource(R.string.higher), style = MaterialTheme.typography.labelSmall)
                 }
+            }
+        },
+        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.done)) } },
+    )
+}
+
+
+@Composable
+private fun TeacherDialog(progress: Progress, recorder: Recorder, onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    var message by remember { mutableStateOf<String?>(null) }
+    val count = remember(recorder.version) { recorder.count() }
+    val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) message = context.getString(R.string.imported_n, recorder.importZip(uri))
+    }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("🎓 " + stringResource(R.string.teacher_title), fontWeight = FontWeight.ExtraBold) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(stringResource(R.string.teacher_desc), style = MaterialTheme.typography.bodySmall, color = Garden.Muted)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Switch(checked = progress.teacherMode, onCheckedChange = { progress.updateTeacherMode(it) })
+                    Spacer(Modifier.width(10.dp))
+                    Text(stringResource(R.string.teacher_mode), fontWeight = FontWeight.Bold)
+                }
+                Text("🎙️ " + stringResource(R.string.recordings_n, count), color = Garden.GreenDark, fontWeight = FontWeight.Bold)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(onClick = {
+                        val zip = recorder.exportZip()
+                        if (zip == null) {
+                            message = context.getString(R.string.no_recordings)
+                        } else {
+                            runCatching {
+                                val uri = FileProvider.getUriForFile(context, context.packageName + ".files", zip)
+                                val send = Intent(Intent.ACTION_SEND)
+                                    .setType("application/zip")
+                                    .putExtra(Intent.EXTRA_STREAM, uri)
+                                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                context.startActivity(Intent.createChooser(send, null))
+                            }
+                        }
+                    }) { Text("📤 " + stringResource(R.string.share_recordings)) }
+                    TextButton(onClick = { importer.launch(arrayOf("application/zip", "application/octet-stream")) }) {
+                        Text("📥 " + stringResource(R.string.import_recordings))
+                    }
+                }
+                message?.let { Text(it, color = Garden.Purple, fontWeight = FontWeight.Bold) }
             }
         },
         confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.done)) } },

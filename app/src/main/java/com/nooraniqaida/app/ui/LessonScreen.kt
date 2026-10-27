@@ -23,6 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -34,7 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.nooraniqaida.app.R
+import com.nooraniqaida.app.audio.Recorder
 import com.nooraniqaida.app.audio.Speaker
+import com.nooraniqaida.app.data.Makhraj
+import com.nooraniqaida.app.data.Sifa
+import com.nooraniqaida.app.data.Tajweed
 import com.nooraniqaida.app.data.Lesson
 import com.nooraniqaida.app.data.QItem
 import com.nooraniqaida.app.data.Spelling
@@ -46,7 +51,14 @@ private fun canSpell(lesson: Lesson) = lesson.number >= 4
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LessonScreen(lesson: Lesson, speaker: Speaker, onBack: () -> Unit, onQuiz: () -> Unit) {
+fun LessonScreen(
+    lesson: Lesson,
+    speaker: Speaker,
+    recorder: Recorder,
+    teacherMode: Boolean,
+    onBack: () -> Unit,
+    onQuiz: () -> Unit,
+) {
     val lang = appLang()
     var selected by remember { mutableStateOf<QItem?>(null) }
     var playingAll by remember { mutableStateOf(false) }
@@ -105,7 +117,7 @@ fun LessonScreen(lesson: Lesson, speaker: Speaker, onBack: () -> Unit, onQuiz: (
             bottomBar = {
                 selected?.let { item ->
                     PracticePanel(
-                        item, speaker, lang, times,
+                        item, speaker, recorder, teacherMode, lang, times,
                         spellParts = if (canSpell(lesson)) Spelling.parts(Spelling.source(item)) else emptyList(),
                         showDiagramByDefault = lesson.number == 1,
                     )
@@ -172,7 +184,30 @@ private fun LessonTitleCard(lesson: Lesson, lang: String, onPlay: () -> Unit) {
             }
             Spacer(Modifier.height(8.dp))
             CompositionLocalProvider(LocalLayoutDirection provides if (lang == "ar") LayoutDirection.Rtl else LayoutDirection.Ltr) {
-                Chip("🔊 " + stringResource(R.string.play_title), false, onPlay)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Chip("🔊 " + stringResource(R.string.play_title), false, onPlay)
+                    lesson.rule?.let { rule ->
+                        Column(
+                            Modifier
+                                .padding(top = 10.dp)
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(Garden.MintSoft)
+                                .padding(12.dp),
+                        ) {
+                            Text("📏 " + stringResource(R.string.rule_title), style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.ExtraBold, color = Garden.GreenDark)
+                            Text(rule.pick(lang), style = MaterialTheme.typography.bodyMedium, color = Garden.Ink)
+                        }
+                    }
+                    Text(
+                        "📚 " + stringResource(R.string.references) + "\n🔈 " + stringResource(R.string.tts_note),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Garden.Muted,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 8.dp),
+                    )
+                }
             }
         }
     }
@@ -224,10 +259,13 @@ private fun LetterCell(item: QItem, selected: Boolean, lang: String, onClick: ()
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun PracticePanel(
     item: QItem,
     speaker: Speaker,
+    recorder: Recorder,
+    teacherMode: Boolean,
     lang: String,
     times: Int,
     spellParts: List<Spelling.Part>,
@@ -235,11 +273,25 @@ private fun PracticePanel(
 ) {
     val context = LocalContext.current
     val checker = remember { PronunciationChecker(context) }
-    DisposableEffect(item.id) { onDispose { checker.cancel() } }
+    DisposableEffect(item.id) {
+        onDispose {
+            checker.cancel()
+            if (recorder.recordingId == item.id) recorder.stop()
+        }
+    }
 
     var feedback by remember(item.id) { mutableStateOf<String?>(null) }
     var listening by remember(item.id) { mutableStateOf(false) }
     var showDiagram by rememberSaveable { mutableStateOf(showDiagramByDefault) }
+    var sifaInfo by remember(item.id) { mutableStateOf<Sifa?>(null) }
+    var pendingRecord by remember { mutableStateOf(false) }
+    val hasRecording = remember(recorder.version, item.id) { recorder.has(item.id) }
+    val isRecording = recorder.recordingId == item.id
+
+    fun startRecording() {
+        speaker.stop()
+        if (!recorder.start(item.id)) feedback = context.getString(R.string.recording_failed)
+    }
 
     fun startListening() {
         listening = true
@@ -262,8 +314,15 @@ private fun PracticePanel(
     }
 
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted) startListening() else feedback = context.getString(R.string.mic_permission_needed)
+        when {
+            !granted -> feedback = context.getString(R.string.mic_permission_needed)
+            pendingRecord -> startRecording()
+            else -> startListening()
+        }
+        pendingRecord = false
     }
+    fun micGranted() = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) ==
+        PackageManager.PERMISSION_GRANTED
 
     val shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
     Column(
@@ -291,6 +350,10 @@ private fun PracticePanel(
                     }
                     Text(stringResource(R.string.makhraj_label, h.makhraj.title.pick(lang)),
                         style = MaterialTheme.typography.bodySmall, color = Garden.Green, fontWeight = FontWeight.Bold)
+                }
+                if (hasRecording) {
+                    Text("🎓 " + stringResource(R.string.recorded), style = MaterialTheme.typography.labelSmall,
+                        color = Garden.Purple, fontWeight = FontWeight.Bold)
                 }
             }
             if (item.harf != null) {
@@ -320,7 +383,8 @@ private fun PracticePanel(
             Row(Modifier.padding(top = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                 MakhrajDiagram(
                     h.makhraj,
-                    Modifier
+                    secondary = if (Sifa.GHUNNAH in Tajweed.sifaat[h.id].orEmpty()) Makhraj.KHAYSHUM else null,
+                    modifier = Modifier
                         .size(width = 150.dp, height = 135.dp)
                         .clip(RoundedCornerShape(18.dp))
                         .background(Color(0xFFFFF8F0))
@@ -340,6 +404,57 @@ private fun PracticePanel(
             }
         }
 
+        // Sifaat (letter qualities) and a pronunciation tip.
+        if (h != null) {
+            val sifaat = Tajweed.sifaat[h.id].orEmpty()
+            if (sifaat.isNotEmpty()) {
+                FlowRow(
+                    Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    sifaat.forEach { sf ->
+                        val heavy = sf == Sifa.HEAVY || sf == Sifa.ITBAQ
+                        Pill(
+                            sf.title.pick(lang),
+                            if (sifaInfo == sf) Garden.Green else if (heavy) Color(0xFFFFE4CC) else Garden.MintSoft,
+                            if (sifaInfo == sf) Color.White else Garden.GreenDark,
+                            modifier = Modifier.clip(RoundedCornerShape(50)).clickable { sifaInfo = if (sifaInfo == sf) null else sf },
+                        )
+                    }
+                }
+                sifaInfo?.let { Text(it.desc.pick(lang), style = MaterialTheme.typography.bodySmall, color = Garden.Ink,
+                    modifier = Modifier.padding(top = 4.dp)) }
+            }
+            Tajweed.tips[h.id]?.let {
+                Text("💡 " + it.pick(lang), style = MaterialTheme.typography.bodySmall, color = Garden.Ink,
+                    fontWeight = FontWeight.Medium, modifier = Modifier.padding(top = 6.dp))
+            }
+        }
+
+        // Teacher mode: record this item with proper tajweed.
+        if (teacherMode) {
+            Row(Modifier.padding(top = 10.dp), verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                GradientButton(
+                    if (isRecording) "⏹ " + stringResource(R.string.stop_record) else "⏺ " + stringResource(R.string.record),
+                    if (isRecording) Brush.linearGradient(listOf(Color(0xFFE5484D), Color(0xFFC62828))) else Garden.traceBrush,
+                    Modifier.weight(1f),
+                ) {
+                    when {
+                        isRecording -> recorder.stop()
+                        micGranted() -> startRecording()
+                        else -> { pendingRecord = true; permission.launch(Manifest.permission.RECORD_AUDIO) }
+                    }
+                }
+                if (hasRecording && !isRecording) {
+                    TextButton(onClick = { recorder.delete(item.id) }) {
+                        Text("🗑 " + stringResource(R.string.delete_recording), color = Garden.Red, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+
         Spacer(Modifier.height(12.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             GradientButton("🔊 " + stringResource(R.string.listen), Garden.buttonBrush, Modifier.weight(1f)) {
@@ -351,13 +466,11 @@ private fun PracticePanel(
                 }
             }
             GradientButton("🎤 " + stringResource(R.string.say_it), Garden.quizBrush, Modifier.weight(1f)) {
-                if (listening) return@GradientButton
-                val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) ==
-                    PackageManager.PERMISSION_GRANTED
+                if (listening || isRecording) return@GradientButton
                 when {
                     !checker.isAvailable() -> feedback = context.getString(R.string.speech_unavailable)
-                    granted -> startListening()
-                    else -> permission.launch(Manifest.permission.RECORD_AUDIO)
+                    micGranted() -> startListening()
+                    else -> { pendingRecord = false; permission.launch(Manifest.permission.RECORD_AUDIO) }
                 }
             }
         }

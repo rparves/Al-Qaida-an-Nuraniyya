@@ -24,7 +24,7 @@ import com.nooraniqaida.app.data.Makhraj
  * no image files to the app.
  */
 @Composable
-fun MakhrajDiagram(makhraj: Makhraj, modifier: Modifier = Modifier) {
+fun MakhrajDiagram(makhraj: Makhraj, modifier: Modifier = Modifier, secondary: Makhraj? = null) {
     val pulse by rememberInfiniteTransition(label = "makhraj").animateFloat(
         initialValue = 0.65f,
         targetValue = 1f,
@@ -95,6 +95,8 @@ fun MakhrajDiagram(makhraj: Makhraj, modifier: Modifier = Modifier) {
         if (makhraj == Makhraj.JAWF) {
             drawPath(mouth, Garden.Orange.copy(alpha = 0.25f * pulse))
         }
+        // Ghunnah letters also sound from the khayshum (nose).
+        secondary?.let { marker(o(it.x, it.y), sx, 1.65f - pulse) }
         marker(o(makhraj.x, makhraj.y), sx, pulse)
     }
 }

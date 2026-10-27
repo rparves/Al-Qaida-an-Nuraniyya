@@ -1,0 +1,127 @@
+package com.nooraniqaida.app.data
+
+/**
+ * Sifaat (letter qualities), pronunciation tips and lesson rules.
+ * Makharij and sifaat follow Al-Muqaddimah al-Jazariyyah (Imam Ibn al-Jazari);
+ * the noon and meem sakin rules follow Tuhfat al-Atfal (Imam al-Jamzuri).
+ */
+enum class Sifa(val title: L, val desc: L) {
+    HEAVY(L("Heavy (tafkheem)", "মোটা (তাফখীম)", "التفخيم"),
+        L("The back of the tongue rises and the mouth fills with sound", "জিহ্বার গোড়া উঁচু হয়, মুখ ভরে আওয়াজ হয়", "يرتفع أقصى اللسان فيمتلئ الفم بالصوت")),
+    LIGHT(L("Light (tarqeeq)", "চিকন (তারক্বীক্ব)", "الترقيق"),
+        L("A thin, light sound that does not fill the mouth", "পাতলা ও হালকা আওয়াজ, মুখ ভরে না", "صوت نحيف لا يمتلئ به الفم")),
+    ITBAQ(L("Itbaq", "ইতবাক্ব", "الإطباق"),
+        L("The tongue presses against the palate: the heaviest letters", "জিহ্বা তালুর সাথে চেপে থাকে: সবচেয়ে মোটা হরফ", "انطباق اللسان على الحنك الأعلى")),
+    QALQALAH(L("Qalqalah", "ক্বলক্বলা", "القلقلة"),
+        L("Bounce the sound when the letter has sukoon", "সাকিন হলে আওয়াজে প্রতিধ্বনি দাও", "اضطراب الصوت عند السكون حتى يُسمع له نبرة")),
+    HAMS(L("Hams (breath)", "হামস (নিঃশ্বাস)", "الهمس"),
+        L("Breath flows out with the sound", "আওয়াজের সাথে নিঃশ্বাস বের হয়", "جريان النفس عند النطق بالحرف")),
+    SAFIR(L("Safeer (whistle)", "সফীর (শিস)", "الصفير"),
+        L("A light whistling sound", "শিসের মতো হালকা আওয়াজ", "صوت زائد يشبه صفير الطائر")),
+    GHUNNAH(L("Ghunnah", "গুন্নাহ", "الغنة"),
+        L("A nasal sound from the khayshum, 2 counts when held", "নাকের বাঁশি থেকে আওয়াজ, ধরে রাখলে ২ হরকত", "صوت أغن من الخيشوم بمقدار حركتين")),
+    INHIRAF(L("Inhiraf", "ইনহিরাফ", "الانحراف"),
+        L("The sound leans away from its makhraj", "আওয়াজ মাখরাজ থেকে একটু হেলে যায়", "ميل الحرف بعد خروجه من مخرجه")),
+    TAKRIR(L("Takreer", "তাকরীর", "التكرير"),
+        L("The tongue tip is ready to roll: keep it from rolling", "জিহ্বার আগা কাঁপতে চায়: কাঁপতে দেবে না", "ارتعاد طرف اللسان، ويجب إخفاؤه")),
+    TAFASHSHI(L("Tafashshi", "তাফাশশী", "التفشي"),
+        L("The air spreads through the mouth", "বাতাস মুখের ভেতর ছড়িয়ে পড়ে", "انتشار الهواء في الفم")),
+    ISTITALAH(L("Istitalah", "ইসতিতালাহ", "الاستطالة"),
+        L("The sound stretches along the whole side of the tongue", "আওয়াজ জিহ্বার পুরো পাশ বরাবর লম্বা হয়", "امتداد الصوت من أول حافة اللسان إلى آخرها")),
+    LEEN(L("Leen", "লীন", "اللين"),
+        L("Soft and easy when it has sukoon after a fatha", "যবরের পর সাকিন হলে নরম ও সহজে", "خروج الحرف في لين وعدم كلفة")),
+}
+
+object Tajweed {
+    private val S = Sifa.entries.associateBy { it.name }
+    private fun s(vararg n: String) = n.map { S.getValue(it) }
+
+    val sifaat: Map<String, List<Sifa>> = mapOf(
+        "alif" to emptyList(),
+        "ba" to s("QALQALAH", "LIGHT"), "ta" to s("HAMS", "LIGHT"), "tha" to s("HAMS", "LIGHT"),
+        "jeem" to s("QALQALAH", "LIGHT"), "hha" to s("HAMS", "LIGHT"), "kha" to s("HEAVY", "HAMS"),
+        "dal" to s("QALQALAH", "LIGHT"), "dhal" to s("LIGHT"), "ra" to s("INHIRAF", "TAKRIR"),
+        "zay" to s("SAFIR", "LIGHT"), "seen" to s("SAFIR", "HAMS", "LIGHT"),
+        "sheen" to s("TAFASHSHI", "HAMS", "LIGHT"), "sad" to s("HEAVY", "ITBAQ", "SAFIR", "HAMS"),
+        "dad" to s("HEAVY", "ITBAQ", "ISTITALAH"), "tta" to s("HEAVY", "ITBAQ", "QALQALAH"),
+        "zza" to s("HEAVY", "ITBAQ"), "ain" to s("LIGHT"), "ghain" to s("HEAVY"),
+        "fa" to s("HAMS", "LIGHT"), "qaf" to s("HEAVY", "QALQALAH"), "kaf" to s("HAMS", "LIGHT"),
+        "lam" to s("INHIRAF"), "meem" to s("GHUNNAH", "LIGHT"), "noon" to s("GHUNNAH", "LIGHT"),
+        "waw" to s("LEEN", "LIGHT"), "ha" to s("HAMS", "LIGHT"), "hamza" to s("LIGHT"),
+        "ya" to s("LEEN", "LIGHT"),
+    )
+
+    /** Tips for the letters learners most often mix up. */
+    val tips: Map<String, L> = mapOf(
+        "alif" to L("Alif follows the letter before it: heavy after a heavy letter, light after a light one.",
+            "আলিফ আগের হরফকে অনুসরণ করে: মোটা হরফের পর মোটা, চিকন হরফের পর চিকন।", "الألف تتبع ما قبلها تفخيماً وترقيقاً."),
+        "hha" to L("ح is a clear, pressed breath from the middle of the throat, not a soft h like ه.",
+            "ح গলার মাঝখান থেকে চাপা ও স্পষ্ট, ه-এর মতো নরম নয়।", "الحاء من وسط الحلق بصوت مبحوح واضح، لا كالهاء."),
+        "ha" to L("ه is a soft breath from the deepest throat; don’t let it turn into ح.",
+            "ه গলার একেবারে গভীর থেকে নরম নিঃশ্বাসে; ح বানিয়ে ফেলো না।", "الهاء من أقصى الحلق بنفس خفيف، فلا تُقلب حاءً."),
+        "ain" to L("ع comes from the middle of the throat with a tight voice; it is not a hamzah.",
+            "ع গলার মাঝখান থেকে চাপা আওয়াজে; এটা হামযা নয়।", "العين من وسط الحلق، ولا تُنطق همزة."),
+        "hamza" to L("Hamzah is a short, clear catch from the deepest throat.",
+            "হামযা গলার গভীর থেকে ছোট ও স্পষ্ট ঝাঁকুনি।", "الهمزة نبرة قوية من أقصى الحلق."),
+        "qaf" to L("ق is deep and heavy from the very back of the tongue; ك is light and a little forward.",
+            "ق জিহ্বার একেবারে গোড়া থেকে মোটা; ك চিকন ও একটু সামনে।", "القاف مفخمة من أقصى اللسان، والكاف مرققة أسفل منها."),
+        "kaf" to L("ك is light with a little breath; don’t make it heavy like ق.",
+            "ك চিকন, সামান্য নিঃশ্বাসসহ; ق-এর মতো মোটা নয়।", "الكاف مرققة مهموسة، فلا تُفخم كالقاف."),
+        "sad" to L("ص is a heavy س: the same whistle, but the tongue rises and the mouth fills.",
+            "ص মোটা س: একই শিস, তবে জিহ্বা উঁচু, মুখ ভরে আওয়াজ।", "الصاد مفخمة مُطبقة مع صفير."),
+        "seen" to L("س is light with a whistle; don’t make it heavy like ص.",
+            "س চিকন ও শিসযুক্ত; ص-এর মতো মোটা নয়।", "السين مرققة بصفير، فلا تُفخم صاداً."),
+        "tta" to L("ط is the strongest heavy letter: the tongue presses up against the palate.",
+            "ط সবচেয়ে মোটা হরফ: জিহ্বা তালুতে চেপে থাকে।", "الطاء أقوى الحروف تفخيماً."),
+        "ta" to L("ت is light with a breath; don’t make it heavy like ط.",
+            "ت চিকন, নিঃশ্বাসসহ; ط-এর মতো মোটা নয়।", "التاء مرققة مهموسة، فلا تُفخم طاءً."),
+        "dad" to L("ض comes from the side of the tongue against the upper molars, heavy and long. It is not د or ظ.",
+            "ض জিহ্বার পাশ ও ওপরের মাড়ির দাঁত থেকে, মোটা ও লম্বা। এটা د বা ظ নয়।", "الضاد من حافة اللسان مع الأضراس، مستطيلة مفخمة."),
+        "zza" to L("ظ: the tongue tip touches the edges of the upper front teeth, heavy. It is not ز.",
+            "ظ: জিহ্বার আগা ওপরের সামনের দাঁতের কিনারায়, মোটা। এটা ز নয়।", "الظاء من طرف اللسان وأطراف الثنايا العليا، مفخمة."),
+        "dhal" to L("ذ: the tongue tip lightly at the edges of the upper teeth, light. It is not ز.",
+            "ذ: জিহ্বার আগা হালকাভাবে ওপরের দাঁতের কিনারায়, চিকন। এটা ز নয়।", "الذال مرققة من طرف اللسان وأطراف الثنايا العليا."),
+        "tha" to L("ث: the tongue tip at the edges of the upper teeth, with breath. It is not س.",
+            "ث: জিহ্বার আগা ওপরের দাঁতের কিনারায়, নিঃশ্বাসসহ। এটা س নয়।", "الثاء مهموسة من طرف اللسان وأطراف الثنايا، لا سيناً."),
+        "ra" to L("ر is heavy with fatha or damma and light with kasra. Don’t roll it.",
+            "ر যবর বা পেশে মোটা, যেরে চিকন। কাঁপাবে না।", "الراء تُفخم بالفتح والضم وتُرقق بالكسر، دون تكرير."),
+        "lam" to L("ل is light, except in the name Allah after a fatha or damma.",
+            "ل চিকন, শুধু যবর বা পেশের পর আল্লাহ শব্দে মোটা।", "اللام مرققة إلا في لفظ الجلالة بعد فتح أو ضم."),
+        "kha" to L("خ is heavy, from the top of the throat.", "خ গলার ওপরের অংশ থেকে মোটা আওয়াজে।", "الخاء مفخمة من أدنى الحلق."),
+        "ghain" to L("غ is heavy, from the top of the throat, with voice (خ without the breath).",
+            "غ গলার ওপরের অংশ থেকে মোটা, কণ্ঠযুক্ত (নিঃশ্বাস ছাড়া খ)।", "الغين مفخمة مجهورة من أدنى الحلق."),
+    )
+
+    val lessonRules: Map<Int, L> = mapOf(
+        1 to L("Say each letter from its own makhraj. Tap 👄 to see where it comes from.",
+            "প্রতিটি হরফ নিজের মাখরাজ থেকে উচ্চারণ করো। কোথা থেকে আসে দেখতে 👄 চাপো।", "انطق كل حرف من مخرجه."),
+        4 to L("Keep each haraka short and clean: fatha opens the mouth, kasra lowers the jaw, damma rounds the lips.",
+            "প্রতিটি হরকত ছোট ও পরিষ্কার: যবরে মুখ খোলে, যেরে চোয়াল নামে, পেশে ঠোঁট গোল হয়।",
+            "انطق الحركة قصيرة: الفتحة بفتح الفم، والكسرة بخفض الفك، والضمة بضم الشفتين."),
+        5 to L("Tanween is an extra noon sakin at the end of a word: say it clearly, without stretching.",
+            "তানভীন শব্দের শেষে একটি বাড়তি নূন সাকিন: স্পষ্ট পড়ো, টানবে না।", "التنوين نون ساكنة زائدة في آخر الاسم."),
+        7 to L("The small alif, yaa and waaw are stretched 2 counts, like the madd letters.",
+            "খাড়া যবর, খাড়া যের ও উল্টা পেশ ২ হরকত টেনে পড়ো।", "الألف والياء والواو الصغيرة تُمد حركتين."),
+        8 to L("Madd ṭabīʿī: stretch exactly 2 counts, no more and no less.",
+            "মদ্দে ত্ববয়ী: ঠিক ২ হরকত টানো, কমও না বেশিও না।", "المد الطبيعي يُمد حركتين."),
+        9 to L("Leen: read softly without stretching, unless you stop on the word (then 2, 4 or 6 counts).",
+            "লীন: নরমভাবে পড়ো, টানবে না; শব্দে থামলে ২, ৪ বা ৬ হরকত।", "اللين بلا مد في الوصل، ويُمد عند الوقف ٢ أو ٤ أو ٦."),
+        10 to L("Join the letter with sukoon to the one before it, firmly, without adding any vowel.",
+            "জযমের হরফকে আগের হরফের সাথে দৃঢ়ভাবে মিলিয়ে পড়ো, কোনো স্বর যোগ করবে না।", "يُنطق الحرف الساكن موصولاً بما قبله بلا حركة."),
+        12 to L("Shadda means the letter twice: first with sukoon, then with the vowel. Hold it with stress.",
+            "তাশদীদ মানে হরফ দুবার: প্রথমে সাকিন, তারপর হরকতসহ। জোর দিয়ে ধরে রাখো।", "الحرف المشدد حرفان: أولهما ساكن والثاني متحرك."),
+        13 to L("Noon and meem with shadda always carry a ghunnah of 2 counts.",
+            "নূন ও মীমে তাশদীদ হলে সবসময় ২ হরকত গুন্নাহ।", "النون والميم المشددتان فيهما غنة بمقدار حركتين."),
+        14 to L("Iẓhār before the throat letters: say the noon clearly. Idghām into ي ن م و with ghunnah, into ل ر without. Iqlāb before ب: it becomes meem with ghunnah. Ikhfāʾ before the other 15 letters: hide it with ghunnah.",
+            "গলার হরফের আগে ইযহার: নূন স্পষ্ট। ي ن م و-তে গুন্নাহসহ, ل ر-তে গুন্নাহ ছাড়া ইদগাম। ب-এর আগে ইক্লাব: গুন্নাহসহ মীম হয়ে যায়। বাকি ১৫ হরফে ইখফা: গুন্নাহসহ লুকিয়ে পড়ো।",
+            "الإظهار عند حروف الحلق، والإدغام في «يرملون»، والإقلاب عند الباء، والإخفاء عند الباقي."),
+        15 to L("Meem sakin: ikhfāʾ shafawī before ب, idghām before م (both with ghunnah), iẓhār before every other letter, with extra care before و and ف.",
+            "মীম সাকিন: ب-এর আগে ইখফা শাফাবী, م-এর আগে ইদগাম (দুটোতেই গুন্নাহ), বাকি সব হরফে ইযহার, و ও ف-এর আগে বিশেষ সতর্কতা।",
+            "الميم الساكنة: إخفاء شفوي عند الباء، وإدغام عند الميم، وإظهار عند الباقي، وأشده عند الواو والفاء."),
+        16 to L("Qalqalah: bounce ق ط ب ج د when they have sukoon, more strongly when you stop on them.",
+            "ক্বলক্বলা: ق ط ب ج د সাকিন হলে প্রতিধ্বনি দাও, থামলে আরও জোরে।", "القلقلة في «قطب جد» عند السكون، وأقوى عند الوقف."),
+        17 to L("When you stop, the last vowel and tanween become sukoon, fathatan becomes a 2-count alif, and taa marbuta becomes haa.",
+            "থামলে শেষ হরকত ও তানভীন জযম হয়, দুই যবর ২ হরকতের আলিফ হয়, আর গোল তা হা হয়।",
+            "عند الوقف تُسكَّن الحركة، ويُبدل تنوين الفتح ألفاً، وتُقلب التاء المربوطة هاءً."),
+    )
+}

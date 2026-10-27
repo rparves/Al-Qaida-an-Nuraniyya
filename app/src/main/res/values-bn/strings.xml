@@ -107,6 +107,23 @@
     <string name="no_listens">আর শোনা যাবে না</string>
     <string name="play_title">শিরোনাম শোনো</string>
     <string name="makharij_title">আওয়াজ কোথা থেকে আসে</string>
+    <string name="teacher">শিক্ষক</string>
+    <string name="teacher_title">শিক্ষকের কণ্ঠ</string>
+    <string name="teacher_desc">একজন যোগ্য শিক্ষক সঠিক মাখরাজ ও তাজবীদসহ যেকোনো হরফ বা শব্দ রেকর্ড করতে পারেন। রেকর্ডিং ফোনের কণ্ঠের বদলে বাজবে এবং ছাত্রদের সাথে শেয়ার করা যাবে।</string>
+    <string name="teacher_mode">শিক্ষক মোড: রেকর্ড বাটন দেখাও</string>
+    <string name="recordings_n">%1$dটি রেকর্ডিং সংরক্ষিত</string>
+    <string name="share_recordings">রেকর্ডিং শেয়ার করো</string>
+    <string name="import_recordings">রেকর্ডিং আনো</string>
+    <string name="imported_n">%1$dটি রেকর্ডিং আনা হয়েছে</string>
+    <string name="no_recordings">এখনো কোনো রেকর্ডিং নেই</string>
+    <string name="record">রেকর্ড</string>
+    <string name="stop_record">রেকর্ড থামাও</string>
+    <string name="delete_recording">মুছুন</string>
+    <string name="recorded">শিক্ষকের রেকর্ডিং</string>
+    <string name="recording_failed">রেকর্ডিং শুরু করা যায়নি।</string>
+    <string name="rule_title">তাজবীদের নিয়ম</string>
+    <string name="references">মাখরাজ ও সিফাত আল-মুকাদ্দিমাতুল জাযারিয়্যাহ (ইমাম ইবনুল জাযারী) অনুসারে; নূন ও মীমের নিয়ম তুহফাতুল আতফাল (ইমাম আল-জামযূরী) অনুসারে।</string>
+    <string name="tts_note">ফোনের কণ্ঠ অনুশীলনের জন্য, এটি পুরোপুরি তাজবীদ মানতে পারে না। সঠিক উচ্চারণ যোগ্য শিক্ষকের কাছে (বা তাঁর রেকর্ডিং থেকে) শেখো।</string>
     <string-array name="cheers">
         <item>দারুণ করছ!</item>
         <item>মাশাআল্লাহ, চালিয়ে যাও!</item>

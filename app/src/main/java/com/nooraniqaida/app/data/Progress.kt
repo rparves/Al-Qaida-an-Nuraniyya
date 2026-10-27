@@ -19,6 +19,15 @@ class Progress(context: Context) {
     var listenLimit by mutableStateOf(prefs.getInt("listen_limit", 0))
         private set
 
+    /** Shows record buttons so a teacher can record items. */
+    var teacherMode by mutableStateOf(prefs.getBoolean("teacher_mode", false))
+        private set
+
+    fun updateTeacherMode(value: Boolean) {
+        teacherMode = value
+        prefs.edit().putBoolean("teacher_mode", value).apply()
+    }
+
     fun updateListenLimit(value: Int) {
         listenLimit = value
         prefs.edit().putInt("listen_limit", value).apply()
@@ -49,7 +58,8 @@ class Progress(context: Context) {
     fun reset() {
         val keep = name
         val limit = listenLimit
-        prefs.edit().clear().putString("name", keep).putInt("listen_limit", limit).apply()
+        val teacher = teacherMode
+        prefs.edit().clear().putString("name", keep).putInt("listen_limit", limit).putBoolean("teacher_mode", teacher).apply()
         mastered = emptySet()
         stars = 0
     }

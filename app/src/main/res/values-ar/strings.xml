@@ -107,6 +107,23 @@
     <string name="no_listens">انتهت مرات الاستماع</string>
     <string name="play_title">استمع للعنوان</string>
     <string name="makharij_title">مخرج الحرف</string>
+    <string name="teacher">المعلم</string>
+    <string name="teacher_title">صوت المعلم</string>
+    <string name="teacher_desc">يستطيع المعلم المتقن تسجيل أي حرف أو كلمة بمخارج وتجويد صحيح. تُشغَّل التسجيلات بدل صوت الهاتف ويمكن مشاركتها مع الطلاب.</string>
+    <string name="teacher_mode">وضع المعلم: إظهار أزرار التسجيل</string>
+    <string name="recordings_n">%1$d تسجيل محفوظ</string>
+    <string name="share_recordings">مشاركة التسجيلات</string>
+    <string name="import_recordings">استيراد التسجيلات</string>
+    <string name="imported_n">تم استيراد %1$d تسجيل</string>
+    <string name="no_recordings">لا توجد تسجيلات بعد</string>
+    <string name="record">تسجيل</string>
+    <string name="stop_record">إيقاف التسجيل</string>
+    <string name="delete_recording">حذف</string>
+    <string name="recorded">تسجيل المعلم</string>
+    <string name="recording_failed">تعذّر بدء التسجيل.</string>
+    <string name="rule_title">قاعدة التجويد</string>
+    <string name="references">المخارج والصفات وفق المقدمة الجزرية للإمام ابن الجزري، وأحكام النون والميم وفق تحفة الأطفال للإمام الجمزوري.</string>
+    <string name="tts_note">صوت الهاتف للتدريب ولا يطبق التجويد كاملاً. تعلّم النطق الصحيح من معلم متقن أو من تسجيلاته.</string>
     <string-array name="cheers">
         <item>أنت رائع!</item>
         <item>ما شاء الله، استمر!</item>

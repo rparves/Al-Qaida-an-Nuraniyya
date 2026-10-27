@@ -36,6 +36,7 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
     }.getOrNull() ?: emptySet()
     private var player: MediaPlayer? = null
     private var arabicVoices: List<Voice> = emptyList()
+    private val recordingsDir = java.io.File(appContext.filesDir, "recordings")
 
     var status by mutableStateOf(Status.LOADING)
         private set
@@ -90,14 +91,15 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
         prefs.edit().putFloat("pitch", value).apply()
     }
 
-    private fun prepareTts() {
-        tts.setSpeechRate(if (slow) 0.5f else 0.8f)
+    private fun prepareTts(stretch: Boolean = false) {
+        val base = if (slow) 0.5f else 0.8f
+        tts.setSpeechRate(if (stretch) base * 0.75f else base)
         tts.setPitch(pitch)
     }
 
     /** Queues [parts] with short pauses between them, the whole sequence [times] times. */
-    private fun sayParts(parts: List<String>, times: Int = 1) {
-        prepareTts()
+    private fun sayParts(parts: List<String>, times: Int = 1, stretch: Boolean = false) {
+        prepareTts(stretch)
         var first = true
         for (t in 0 until times) {
             parts.forEachIndexed { i, part ->
@@ -115,12 +117,45 @@ class Speaker(context: Context) : TextToSpeech.OnInitListener {
      */
     fun speak(item: QItem, times: Int = 1, spelling: List<String>? = null) {
         stopPlayer()
+        tts.stop()
+        // 1. A teacher's recording, made in the app with proper tajweed.
+        val recorded = java.io.File(recordingsDir, "${item.id}.m4a")
+        if (recorded.exists()) {
+            playSource(times) { setDataSource(recorded.absolutePath) }
+            return
+        }
+        // 2. A bundled clip.
         val clip = "${item.id}.ogg"
         if (spelling.isNullOrEmpty() && clip in clips) {
             playAsset("audio/$clip", times)
             return
         }
-        sayParts(spelling.orEmpty() + item.speak, times)
+        // 3. The phone's Arabic voice.
+        sayParts(spelling.orEmpty() + item.speak, times, item.stretch)
+    }
+
+    fun hasRecording(item: QItem) = java.io.File(recordingsDir, "${item.id}.m4a").exists()
+
+    private fun playSource(times: Int, source: MediaPlayer.() -> Unit) {
+        var remaining = times
+        runCatching {
+            player = MediaPlayer().apply {
+                source()
+                if (slow && Build.VERSION.SDK_INT >= 23) playbackParams = playbackParams.setSpeed(0.75f)
+                setOnCompletionListener { mp ->
+                    remaining--
+                    if (remaining > 0 && player === mp) {
+                        mp.seekTo(0)
+                        mp.start()
+                    } else {
+                        mp.release()
+                        if (player === mp) player = null
+                    }
+                }
+                prepare()
+                start()
+            }
+        }
     }
 
     fun say(text: String) {

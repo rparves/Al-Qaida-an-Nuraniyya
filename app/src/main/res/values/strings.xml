@@ -107,6 +107,23 @@
     <string name="no_listens">No listens left</string>
     <string name="play_title">Hear the title</string>
     <string name="makharij_title">Where the sound comes from</string>
+    <string name="teacher">Teacher</string>
+    <string name="teacher_title">Teacher’s voice</string>
+    <string name="teacher_desc">A qualified teacher can record any letter or word with proper makharij and tajweed. Recordings play instead of the phone voice and can be shared with students.</string>
+    <string name="teacher_mode">Teacher mode: show record buttons</string>
+    <string name="recordings_n">%1$d recordings saved</string>
+    <string name="share_recordings">Share recordings</string>
+    <string name="import_recordings">Import recordings</string>
+    <string name="imported_n">Imported %1$d recordings</string>
+    <string name="no_recordings">No recordings yet</string>
+    <string name="record">Record</string>
+    <string name="stop_record">Stop recording</string>
+    <string name="delete_recording">Delete</string>
+    <string name="recorded">Teacher’s recording</string>
+    <string name="recording_failed">Couldn’t start recording.</string>
+    <string name="rule_title">Tajweed rule</string>
+    <string name="references">Makharij and sifaat follow Al-Muqaddimah al-Jazariyyah (Imam Ibn al-Jazari); the noon and meem rules follow Tuhfat al-Atfal (Imam al-Jamzuri).</string>
+    <string name="tts_note">The phone voice is for practice and can’t fully apply tajweed. Learn exact pronunciation from a qualified teacher (or their recordings).</string>
     <string-array name="cheers">
         <item>You’re doing great!</item>
         <item>MashaAllah, keep going!</item>
